@@ -86,7 +86,8 @@ triggers = [
     (corgi, trigger.corgi),
     (shiba, trigger.shiba),
     (random_dog, trigger.random),
-    (['той терьер', "той"], trigger.toy),
+    (["той"], trigger.toy),
     (['мопс'], trigger.pug),
     (['триста'], trigger.trista),
+    (['терьер'], trigger.terrier),
 ]

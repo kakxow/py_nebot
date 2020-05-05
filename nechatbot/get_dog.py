@@ -2,11 +2,12 @@ import httpx
 
 
 dog_urls = {
-  'corgi': "https://dog.ceo/api/breed/corgi/cardigan/images/random",
-  'toy': "https://dog.ceo/api/breed/terrier/toy/images/random",
-  'pug': "https://dog.ceo/api/breed/pug/images/random",
-  'shiba': "http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false",
-  'random': "https://dog.ceo/api/breeds/image/random",
+    'corgi': "https://dog.ceo/api/breed/corgi/cardigan/images/random",
+    'toy': "https://dog.ceo/api/breed/terrier/toy/images/random",
+    'pug': "https://dog.ceo/api/breed/pug/images/random",
+    'shiba': "http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false",
+    'random': "https://dog.ceo/api/breeds/image/random",
+    "terrier": "https://dog.ceo/api/breed/terrier/images/random",
 }
 
 

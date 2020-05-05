@@ -42,5 +42,9 @@ async def pug() -> str:
     return await get_dog("pug")
 
 
+async def terrier() -> str:
+    return await get_dog("terrier")
+
+
 async def trista() -> str:
     return rnd.choice(trista_list)
