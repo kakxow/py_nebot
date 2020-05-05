@@ -21,7 +21,9 @@ async def on_message(bot, msg: dict):
     if 'ето не чат' in text:
         await bot.set_chat_title(chat_id, text)
         return
-    for _, trigger in triggers.__dict__.items():
+    trigger_list = (trigger for trigger in triggers.__dict__.values()
+                    if callable(trigger))
+    for _, trigger in trigger_list:
         message = await trigger(text.lower())
         if message:
             await bot.send_message(chat_id, message)
