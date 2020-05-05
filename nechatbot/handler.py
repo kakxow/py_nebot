@@ -19,11 +19,5 @@ async def on_message(bot, msg: dict):
             await bot.send_message(chat_id, random.choice(net))
         for (variants, result) in triggers:
             if re.search('|'.join(variants), text, re.I):
-                if isinstance(result, str):
-                    message = result
-                elif isinstance(result, tuple):
-                    coro, arg = result
-                    message = await coro(arg)
-                else:
-                    message = result()
+                message = await result()
                 await bot.send_message(chat_id, message)

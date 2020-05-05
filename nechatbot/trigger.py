@@ -1,7 +1,13 @@
 import random as rnd
-from typing import List
 
 from .get_dog import get_dog
+
+trista_list = [
+  "хуйни в ссылку декабриста",
+  "благодарите программиста",
+  "абстрагируйся от суеты, достигнув с космосом единства",
+  "метни бутылку в альпиниста",
+]
 
 
 async def glory_to_heroes() -> str:
@@ -36,5 +42,5 @@ async def pug() -> str:
     return await get_dog("pug")
 
 
-async def trista(enum: List[str]) -> str:
-    return rnd.choice(enum)
+async def trista() -> str:
+    return rnd.choice(trista_list)
