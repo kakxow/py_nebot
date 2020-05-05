@@ -8,7 +8,6 @@ hstspreload==2020.5.5
 httpx==0.12.1
 hyperframe==5.2.0
 idna==2.9
-pkg-resources==0.0.0
 python-dotenv==0.13.0
 rfc3986==1.4.0
 sniffio==1.1.0
