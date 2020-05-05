@@ -23,7 +23,7 @@ async def on_message(bot, msg: dict):
         return
     trigger_list = (trigger for trigger in triggers.__dict__.values()
                     if callable(trigger))
-    for _, trigger in trigger_list:
+    for trigger in trigger_list:
         message = await trigger(text.lower())
         if message:
             await bot.send_message(chat_id, message)
