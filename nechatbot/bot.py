@@ -20,8 +20,10 @@ class Bot:
                 self.last_update_id = int(f.read())
         except FileNotFoundError:
             self.last_update_id = 0
+        print("bot initialized")
 
     async def start(self):
+        print("bot started")
         while True:
             updates = await self.poll()
             for update in updates:
@@ -34,6 +36,7 @@ class Bot:
         await self.client.post(url, json=data)
 
     async def send_message(self, chat_id, text, **kwargs):
+        print("Message to send - ", text)
         data = {'text': text, 'chat_id': chat_id, **kwargs}
         url = urljoin(TG_API_URL, quote(f'bot{self.token}/sendMessage'))
         await self.client.post(url, json=data)
@@ -50,6 +53,7 @@ class Bot:
         response = await self.client.get(url=url, params=params)
         updates = json.loads(response.text)['result']
         if updates:
+            print(len(updates), " updates received.")
             last_update = max(updates, key=lambda x: x['update_id'])
             self.last_update_id = last_update['update_id'] + 1
             async with aiofiles.open(filename, mode='w') as f:
