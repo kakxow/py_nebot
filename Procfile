@@ -1,0 +1,1 @@
+nebot: python main.py
