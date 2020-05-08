@@ -1,4 +1,4 @@
-import httpx
+import httpx  # type: ignore
 
 
 async def get(url: str) -> str:

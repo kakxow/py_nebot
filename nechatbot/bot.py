@@ -2,8 +2,8 @@ import asyncio
 import json
 from urllib.parse import urljoin, quote
 
-import aiofiles
-import httpx
+import aiofiles  # type: ignore
+import httpx  # type: ignore
 
 from .constants import TG_API_URL
 
