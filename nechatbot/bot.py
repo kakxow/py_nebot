@@ -27,7 +27,7 @@ class Bot:
         while True:
             updates = await self.poll()
             for update in updates:
-                await self.on_message(update.get('message'))
+                await self.on_message(update.get('message', {}))
             await asyncio.sleep(0.3)
 
     async def send_sticker(self, chat_id: str, sticker_id: str, **kwargs):
