@@ -30,7 +30,7 @@ def words_in_text_re(words: Tuple[str, ...], text: str) -> bool:
 
 
 async def ukraine(text: str) -> str:
-    return "ГЕРОЯМ СЛАВА!\U0001F1E6" if "слава украине" in text else ""
+    return "ГЕРОЯМ СЛАВА! \U0001F1FA\U0001F1E6" if "слава украине" in text else ""
 
 
 async def swearing(text: str) -> str:
