@@ -30,7 +30,7 @@ def words_in_text_re(words: Tuple[str, ...], text: str) -> bool:
 
 
 async def ukraine(text: str) -> str:
-    return "ГЕРОЯМ СЛАВА!\U0001F1FA" if "слава украине" in text else ""
+    return "ГЕРОЯМ СЛАВА!\U0001F1E6" if "слава украине" in text else ""
 
 
 async def swearing(text: str) -> str:
@@ -48,7 +48,7 @@ async def trista(text: str) -> str:
 
 
 async def net(text: str) -> str:
-    pattern_net = r'\Wнет'
+    pattern_net = r'(\W|^)нет$'
     match = re.search(pattern_net, text)
     return random.choice(constants.net) if match else ""
 

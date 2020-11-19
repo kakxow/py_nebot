@@ -54,6 +54,20 @@ async def test_net(random_string):
 
 
 @pytest.mark.asyncio
+async def test_net_mid_text(random_string):
+    text = random_string + " нет " + random_string
+    text = await triggers.net(text)
+    assert text == ''
+
+
+@pytest.mark.asyncio
+async def test_net_only(random_string):
+    text = "нет"
+    text = await triggers.net(text)
+    assert text in constants.net
+
+
+@pytest.mark.asyncio
 async def test_net_old(random_string):
     text = random_string + "нет"
     text = await triggers.net(text)
