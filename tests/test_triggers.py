@@ -20,7 +20,7 @@ def random_string():
 async def test_ukraine(random_string):
     text = random_string + "Слава украине!" + random_string
     result = await triggers.ukraine(text.lower())
-    assert result == "ГЕРОЯМ СЛАВА!\U0001F1FA"
+    assert result == "ГЕРОЯМ СЛАВА!\U0001F1E6"
 
 
 @pytest.mark.parametrize('bad_word', constants.trash)
