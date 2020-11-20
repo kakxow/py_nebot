@@ -20,9 +20,9 @@ async def on_message(bot, msg: dict):
     if 'ето не чат' in text:
         return await bot.set_chat_title(chat_id, text)
 
-    callable_reiggers = \
+    callable_triggers = \
         (getattr(triggers, trigger) for trigger in triggers.__all__)
-    for trigger in callable_reiggers:
+    for trigger in callable_triggers:
         message = await trigger(text.lower())
         if message:
             return await bot.send_message(chat_id, message)
