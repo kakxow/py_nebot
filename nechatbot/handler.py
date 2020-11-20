@@ -17,7 +17,7 @@ async def on_message(bot, msg: dict):
     text = msg.get('text', '')
     if not text:
         return
-    if 'ето не чат' in text:
+    if 'ето не чат' in text.lower():
         return await bot.set_chat_title(chat_id, text)
 
     callable_triggers = \
