@@ -21,16 +21,24 @@ def is_message_contains_phrases(message: str, *phrases: str) -> bool:
 
 
 def is_message_startswith(message: str, *prefixes: str) -> bool:
+    return any(message.lower().startswith(prefix.lower()) for prefix in prefixes)
+
+
+def is_message_starts_with_word(message: str, *word_prefixes: str) -> bool:
     match = FIRST_WORD_PATTERN.search(message.lower())
     if match is None:
         return False
     first_word = match.group()
-    return any(first_word == prefix.lower() for prefix in prefixes)
+    return any(first_word == word.lower() for word in word_prefixes)
 
 
 def is_message_endswith(message: str, *postfixes: str) -> bool:
+    return any(message.lower().endswith(postfix.lower()) for postfix in postfixes)
+
+
+def is_message_ends_with_word(message: str, *word_postfixes: str) -> bool:
     match = LAST_WORD_PATTERN.search(message.lower())
     if match is None:
         return False
     last_word = match.group()
-    return any(last_word == postfix.lower() for postfix in postfixes)
+    return any(last_word == postfix.lower() for postfix in word_postfixes)

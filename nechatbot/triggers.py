@@ -17,7 +17,11 @@ __all__ = [
     "net",
 ]
 
-from .predicates import is_message_contains_words, is_message_endswith, is_message_contains_phrases
+from .predicates import (
+    is_message_contains_words,
+    is_message_ends_with_word,
+    is_message_contains_phrases,
+)
 
 
 async def ukraine(message: str) -> Optional[str]:
@@ -40,18 +44,20 @@ async def hate_speech(message: str) -> Optional[str]:
 
 
 async def trista(message: str) -> Optional[str]:
-    if is_message_endswith(message, constants.tractor_driver):
+    if is_message_ends_with_word(message, constants.tractor_driver):
         return random.choice(constants.trista)
     return None
 
 
 async def net(text: str) -> Optional[str]:
-    if is_message_endswith(text, constants.no_means_no):
+    if is_message_ends_with_word(text, constants.no_means_no):
         return random.choice(constants.net)
     return None
 
 
-async def base_dog_trigger(url: str, message: str, *trigger_words: str) -> Optional[str]:
+async def base_dog_trigger(
+    url: str, message: str, *trigger_words: str
+) -> Optional[str]:
     if is_message_contains_words(message, *trigger_words):
         return await get_dog.get(url)
     return None
