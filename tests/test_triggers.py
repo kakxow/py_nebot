@@ -48,7 +48,7 @@ async def test_trista(random_string):
 
 @pytest.mark.asyncio
 async def test_trista_mid_text(random_string):
-    text = f"{random_string} нет {random_string}"
+    text = f"{random_string} триста {random_string}"
     result = await triggers.trista(text.lower())
     assert result is None
 
