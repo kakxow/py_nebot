@@ -1,6 +1,5 @@
 import random
-import re
-from typing import Tuple
+from typing import Optional
 
 from . import constants, get_dog
 
@@ -18,72 +17,71 @@ __all__ = [
     "net",
 ]
 
-
-def words_in_text(words: Tuple[str, ...], text: str) -> bool:
-    return any(word in text for word in words)
+from .predicates import is_message_contains_words, is_message_endswith, is_message_contains_phrases
 
 
-def words_in_text_re(words: Tuple[str, ...], text: str) -> bool:
-    pattern = r'\b' + r'\b|\b'.join(words) + r'\b'
-    match = re.search(pattern, text, re.I)
-    return bool(match)
+async def ukraine(message: str) -> Optional[str]:
+    if is_message_contains_phrases(message, *constants.glory_to_ukraine):
+        return constants.glory_to_ukraine_response
+    return None
 
 
-async def ukraine(text: str) -> str:
-    return "ГЕРОЯМ СЛАВА! \U0001F1FA\U0001F1E6" if "слава украине" in text else ""
+async def swearing(message: str) -> Optional[str]:
+    if is_message_contains_words(message, *constants.trash):
+        return constants.trash_response
+    return None
 
 
-async def swearing(text: str) -> str:
-    is_swearing = words_in_text(constants.trash, text.split())
-    return "а давайте не материться" if is_swearing else ""
+async def hate_speech(message: str) -> Optional[str]:
+    is_hate_speech = is_message_contains_words(message, *constants.hate_speech)
+    if is_hate_speech:
+        return constants.hate_speech_response
+    return None
 
 
-async def hate_speech(text: str) -> str:
-    is_hate_speech = words_in_text(constants.hate_speech, text.split())
-    return "это хейтспич приятель" if is_hate_speech else ""
+async def trista(message: str) -> Optional[str]:
+    if is_message_endswith(message, constants.tractor_driver):
+        return random.choice(constants.trista)
+    return None
 
 
-async def trista(text: str) -> str:
-    return random.choice(constants.trista) if "триста" in text else ""
+async def net(text: str) -> Optional[str]:
+    if is_message_endswith(text, constants.no_means_no):
+        return random.choice(constants.net)
+    return None
 
 
-async def net(text: str) -> str:
-    pattern_net = r'(\W|^)нет$'
-    match = re.search(pattern_net, text)
-    return random.choice(constants.net) if match else ""
+async def base_dog_trigger(url: str, message: str, *trigger_words: str) -> Optional[str]:
+    if is_message_contains_words(message, *trigger_words):
+        return await get_dog.get(url)
+    return None
 
 
-async def random_dog(text: str) -> str:
+async def random_dog(message: str) -> Optional[str]:
     random_dog_url = "https://dog.ceo/api/breeds/image/random"
-    has_random_dog = words_in_text(constants.random_dog, text.split())
-    return await get_dog.get(random_dog_url) if has_random_dog else ""
+    return await base_dog_trigger(random_dog_url, message, *constants.random_dog)
 
 
-async def corgi(text: str) -> str:
+async def corgi(message: str) -> Optional[str]:
     corgi_url = "https://dog.ceo/api/breed/corgi/images/random"
-    has_corgi = words_in_text(constants.corgi, text.split())
-    return await get_dog.get(corgi_url) if has_corgi else ""
+    return await base_dog_trigger(corgi_url, message, *constants.corgi)
 
 
-async def shibe(text: str) -> str:
+async def shibe(message: str) -> Optional[str]:
     shibe_url = "http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false"
-    has_shibe = words_in_text(constants.shibe, text.split())
-    return await get_dog.get(shibe_url) if has_shibe else ""
+    return await base_dog_trigger(shibe_url, message, *constants.shibe)
 
 
-async def toy(text: str) -> str:
+async def toy(message: str) -> Optional[str]:
     toy_url = "https://dog.ceo/api/breed/terrier/toy/images/random"
-    has_toy = words_in_text(constants.toy, text.split())
-    return await get_dog.get(toy_url) if has_toy else ""
+    return await base_dog_trigger(toy_url, message, *constants.toy)
 
 
-async def pug(text: str) -> str:
+async def pug(message: str) -> Optional[str]:
     pug_url = "https://dog.ceo/api/breed/pug/images/random"
-    has_pug = words_in_text(constants.pug, text.split())
-    return await get_dog.get(pug_url) if has_pug else ""
+    return await base_dog_trigger(pug_url, message, *constants.pug)
 
 
-async def terrier(text: str) -> str:
+async def terrier(message: str) -> Optional[str]:
     terrier_url = "https://dog.ceo/api/breed/terrier/images/random"
-    has_terrier = words_in_text(constants.terrier, text.split())
-    return await get_dog.get(terrier_url) if has_terrier else ""
+    return await base_dog_trigger(terrier_url, message, *constants.terrier)

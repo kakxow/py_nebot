@@ -1,5 +1,6 @@
-from .constants import greeting_sticker
 from . import triggers
+from .constants import greeting_sticker, change_title_prefixes
+from .predicates import is_message_startswith
 
 
 async def on_message(bot, msg: dict):
@@ -17,7 +18,8 @@ async def on_message(bot, msg: dict):
     text = msg.get('text', '')
     if not text:
         return
-    if 'ето не чат' in text.lower():
+
+    if is_message_startswith(text, *change_title_prefixes):
         return await bot.set_chat_title(chat_id, text)
 
     callable_triggers = \

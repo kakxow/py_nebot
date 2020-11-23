@@ -41,9 +41,16 @@ async def test_hate_speech(hate_speech, random_string):
 
 @pytest.mark.asyncio
 async def test_trista(random_string):
-    text = random_string + ' ' + "триста" + ' ' + random_string
+    text = random_string + " триста"
     result = await triggers.trista(text.lower())
     assert result in constants.trista
+
+
+@pytest.mark.asyncio
+async def test_trista_mid_text(random_string):
+    text = f"{random_string} нет {random_string}"
+    result = await triggers.trista(text.lower())
+    assert result is None
 
 
 @pytest.mark.asyncio
@@ -57,7 +64,7 @@ async def test_net(random_string):
 async def test_net_mid_text(random_string):
     text = random_string + " нет " + random_string
     text = await triggers.net(text)
-    assert text == ''
+    assert text is None
 
 
 @pytest.mark.asyncio
@@ -71,7 +78,7 @@ async def test_net_only(random_string):
 async def test_net_old(random_string):
     text = random_string + "нет"
     text = await triggers.net(text)
-    assert text == ''
+    assert text is None
 
 
 @pytest.mark.parametrize('random_dog', constants.random_dog)
@@ -87,7 +94,7 @@ async def test_random_dog(random_dog, random_string):
 async def test_random_dog_old(random_dog, random_string):
     text = random_string + random_dog + random_string
     result = await triggers.random_dog(text)
-    assert result == ''
+    assert result is None
 
 
 @pytest.mark.parametrize('corgi', constants.corgi)
