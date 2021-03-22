@@ -15,7 +15,8 @@ __all__ = [
     "terrier",
     "trista",
     "net",
-    "social_credit"
+    "social_credit",
+    "show_social_credit"
 ]
 
 from .predicates import (
