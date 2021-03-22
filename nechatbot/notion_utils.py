@@ -1,3 +1,5 @@
+import threading
+
 from notion.client import NotionClient  # type: ignore
 
 from .constants import CREDIT_FIELD_NAME, NOTION_TOKEN, NOTION_DB_PAGE_URL
@@ -51,7 +53,7 @@ def _add_credits_or_record(user: dict, credits: int):
         add_record(user, credits)
 
 
-def add_credits_or_create_record(user: dict, credits: int):
+def add_credits_or_record(user: dict, credits: int):
     t = threading.Thread(target=_add_credits_or_record, args=(user, credits))
     t.start()
     print("Thread started")
