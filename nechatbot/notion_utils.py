@@ -24,11 +24,12 @@ def get_all_scores():
 def add_record(user: dict, score: int = 0):
     table = get_table()
     row = table.add_row()
-    row.telegram_id = user["id"]
+    row.telegram_id = str(user["id"])
     row.first_name = user["first_name"]
     row.last_name = user.get("last_name", "")
     row.username = user.get("username", "")
     row.credit = score
+    print(f"Created new record {row.first_name} with score {score}")
 
 
 def add_credits(user: dict, credits: int):
@@ -40,6 +41,7 @@ def add_credits(user: dict, credits: int):
     current_credits = getattr(target_record, CREDIT_FIELD_NAME)
     new_credits = current_credits + credits
     setattr(target_record, CREDIT_FIELD_NAME, new_credits)
+    print("Record {target_record.first_name} has score of {new_credit} now")
 
 
 def add_credits_or_record(user: dict, credits: int):
