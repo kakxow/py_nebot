@@ -103,7 +103,6 @@ async def terrier(msg: dict) -> Optional[str]:
 async def social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", "")
     reply_message = msg.get("reply_to_message", "")
-    print(msg.get("text", ""))
     print(sticker)
     if sticker and reply_message:
         sticker_id = sticker["file_id"]
