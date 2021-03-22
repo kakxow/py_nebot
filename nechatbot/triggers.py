@@ -1,7 +1,9 @@
 import random
 from typing import Optional
 
-from . import constants, get_dog, notion_utils
+from . import constants, get_dog
+from . import trello_utils as social_credit_calc
+
 
 __all__ = [
     "ukraine",
@@ -105,7 +107,7 @@ async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     if message == constants.social_credit_command:
         print("Getting all credit scores.")
-        return notion_utils.get_all_scores_pretty()
+        return social_credit_calc.get_all_scores_pretty()
     return None
 
 
@@ -117,8 +119,8 @@ async def social_credit(msg: dict) -> Optional[str]:
         reply_user = reply_message["from"]
         if sticker_id == constants.positive_credit_sticker_id:
             print("Adding credit score.")
-            notion_utils.add_credits_or_record(reply_user, constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit_calc.add_credits_or_record(reply_user, constants.SOCIAL_CREDIT_INCREMENT)
         elif sticker_id == constants.negative_credit_sticker_id:
             print("Substracting credit score.")
-            notion_utils.add_credits_or_record(reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit_calc.add_credits_or_record(reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
     return None
