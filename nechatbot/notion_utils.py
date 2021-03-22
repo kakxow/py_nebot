@@ -17,9 +17,26 @@ def get_page():
 
 
 def get_all_scores():
-    table = get_table()
-    all_records = table.get_rows()
+    page = get_page()
+    filter_params = {
+        "filters": [{
+            "filter": {"operator": "is_not_empty"},
+            "property": "title"
+        }],
+        "operator": "and"
+    }
+    sort_params = [{
+        "direction": "descending",
+        "property": CREDIT_FIELD_NAME,  # Don't ask me, ask Notion. Nl?g
+    }]
+    all_records = page.build_query(filter=filter_params, sort=sort_params).execute()
     return [record.get_all_properties() for record in all_records]
+
+
+def get_all_scores_pretty():
+    scores = get_all_scores()
+    text_scores = [f"{record.first_name} {record.username} - {getattr(record, CREDIT_FIELD_NAME)}" for record in scores]
+    return "\n".join(text_scores)
 
 
 def add_record(user: dict, score: int = 0):

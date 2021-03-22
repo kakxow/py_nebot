@@ -100,6 +100,13 @@ async def terrier(msg: dict) -> Optional[str]:
     return await base_dog_trigger(terrier_url, msg, *constants.terrier)
 
 
+async def show_social_credit(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    if message == constants.social_credit_command:
+        return notion_utils.get_all_scores_pretty()
+    return None
+
+
 async def social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", "")
     reply_message = msg.get("reply_to_message", "")

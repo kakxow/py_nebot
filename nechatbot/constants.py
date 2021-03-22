@@ -109,3 +109,5 @@ tractor_driver = "триста"
 change_title_prefixes = ("ето не чат", "ето нечат")
 
 no_means_no = "нет"
+
+social_credit_command = "/show_social_credit_scores"
