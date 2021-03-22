@@ -19,7 +19,7 @@ class NameNotFound(BaseException):
 
 def get_all_scores() -> list:
     nechat_list = client.get_list(TRELLO_NECHAT_LIST_ID)
-    all_records = [json.loads(card.desc) for card in nechat_list.list_cards_iter()]
+    all_records = [json.loads(card.desc) for card in nechat_list.list_cards_iter() if card.desc.startswith("{")]
     all_records.sort(key=lambda c: c[CREDIT_FIELD_NAME])
     return all_records
 
