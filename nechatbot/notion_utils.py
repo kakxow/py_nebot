@@ -12,7 +12,7 @@ class NameNotFound(BaseException):
 def get_page():
     # Connects and returns a table with scores.
     client = NotionClient(token_v2=NOTION_TOKEN)
-    page = client.get_block(NOTION_DB_PAGE_URL)
+    page = client.get_collection_view(NOTION_DB_PAGE_URL)
     return page
 
 
