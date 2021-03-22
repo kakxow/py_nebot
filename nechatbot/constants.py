@@ -12,8 +12,8 @@ CREDIT_FIELD_NAME = "credit"
 SOCIAL_CREDIT_INCREMENT = 20
 
 greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
-positive_credit_sticker_id = "CAACAgEAAxkBAAECFt5gWIXnVxS1ZcyzLQnK0amTzxk20wACAgADf3BGHAXMZNg3IivIHgQ"
-negative_credit_sticker_id = "CAACAgEAAxkBAAECFuJgWIYPCU1PpMMvDukUZxnVCW410QACAwADf3BGHENZiEtY50bNHgQ"
+positive_credit_sticker_id = "AgADAgADf3BGHA"
+negative_credit_sticker_id = "AgADAwADf3BGHA"
 
 
 trash = (
