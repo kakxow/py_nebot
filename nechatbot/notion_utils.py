@@ -35,7 +35,7 @@ def get_all_scores():
 
 def get_all_scores_pretty():
     scores = get_all_scores()
-    text_scores = [f"{record.first_name} {record.username} - {getattr(record, CREDIT_FIELD_NAME)}" for record in scores]
+    text_scores = [f"{record["first_name"]} {record["username"]} - {getattr(record, CREDIT_FIELD_NAME)}" for record in scores]
     return "\n".join(text_scores)
 
 
