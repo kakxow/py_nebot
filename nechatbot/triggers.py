@@ -104,6 +104,7 @@ async def terrier(msg: dict) -> Optional[str]:
 async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     if message == constants.social_credit_command:
+        print("Getting all credit scores.")
         return notion_utils.get_all_scores_pretty()
     return None
 
@@ -111,14 +112,13 @@ async def show_social_credit(msg: dict) -> Optional[str]:
 async def social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", "")
     reply_message = msg.get("reply_to_message", "")
-    print(sticker)
     if sticker and reply_message:
         sticker_id = sticker["file_unique_id"]
-        print(sticker_id)
-        reply_user = reply_message["from"]  # No get here, reply should have this field in a chat.
-        print(reply_user)
+        reply_user = reply_message["from"]
         if sticker_id == constants.positive_credit_sticker_id:
+            print("Adding credit score.")
             notion_utils.add_credits_or_record(reply_user, constants.SOCIAL_CREDIT_INCREMENT)
         elif sticker_id == constants.negative_credit_sticker_id:
+            print("Substracting credit score.")
             notion_utils.add_credits_or_record(reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
     return None
