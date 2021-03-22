@@ -19,7 +19,8 @@ def random_string():
 @pytest.mark.asyncio
 async def test_ukraine(random_string):
     text = random_string + "Слава украине!" + random_string
-    result = await triggers.ukraine(text.lower())
+    msg = {"text": text}
+    result = await triggers.ukraine(msg)
     assert result == "ГЕРОЯМ СЛАВА! \U0001F1FA\U0001F1E6"
 
 
@@ -27,7 +28,8 @@ async def test_ukraine(random_string):
 @pytest.mark.asyncio
 async def test_swearing(bad_word, random_string):
     text = random_string + ' ' + bad_word + ' ' + random_string
-    result = await triggers.swearing(text.lower())
+    msg = {"text": text}
+    result = await triggers.swearing(msg)
     assert result == "а давайте не материться"
 
 
@@ -35,49 +37,56 @@ async def test_swearing(bad_word, random_string):
 @pytest.mark.asyncio
 async def test_hate_speech(hate_speech, random_string):
     text = random_string + ' ' + hate_speech + ' ' + random_string
-    result = await triggers.hate_speech(text.lower())
+    msg = {"text": text}
+    result = await triggers.hate_speech(msg)
     assert result == "это хейтспич приятель"
 
 
 @pytest.mark.asyncio
 async def test_trista(random_string):
     text = random_string + " триста"
-    result = await triggers.trista(text.lower())
+    msg = {"text": text}
+    result = await triggers.trista(msg)
     assert result in constants.trista
 
 
 @pytest.mark.asyncio
 async def test_trista_mid_text(random_string):
     text = f"{random_string} триста {random_string}"
-    result = await triggers.trista(text.lower())
+    msg = {"text": text}
+    result = await triggers.trista(msg)
     assert result is None
 
 
 @pytest.mark.asyncio
 async def test_net(random_string):
     text = random_string + " нет"
-    text = await triggers.net(text)
+    msg = {"text": text}
+    text = await triggers.net(msg)
     assert text in constants.net
 
 
 @pytest.mark.asyncio
 async def test_net_mid_text(random_string):
     text = random_string + " нет " + random_string
-    text = await triggers.net(text)
+    msg = {"text": text}
+    text = await triggers.net(msg)
     assert text is None
 
 
 @pytest.mark.asyncio
 async def test_net_only(random_string):
     text = "нет"
-    text = await triggers.net(text)
+    msg = {"text": text}
+    text = await triggers.net(msg)
     assert text in constants.net
 
 
 @pytest.mark.asyncio
 async def test_net_old(random_string):
     text = random_string + "нет"
-    text = await triggers.net(text)
+    msg = {"text": text}
+    text = await triggers.net(msg)
     assert text is None
 
 
@@ -85,7 +94,8 @@ async def test_net_old(random_string):
 @pytest.mark.asyncio
 async def test_random_dog(random_dog, random_string):
     text = random_string + ' ' + random_dog + ' ' + random_string
-    result = await triggers.random_dog(text)
+    msg = {"text": text}
+    result = await triggers.random_dog(msg)
     assert "dog.ceo" in result
 
 
@@ -93,7 +103,8 @@ async def test_random_dog(random_dog, random_string):
 @pytest.mark.asyncio
 async def test_random_dog_old(random_dog, random_string):
     text = random_string + random_dog + random_string
-    result = await triggers.random_dog(text)
+    msg = {"text": text}
+    result = await triggers.random_dog(msg)
     assert result is None
 
 
@@ -101,7 +112,8 @@ async def test_random_dog_old(random_dog, random_string):
 @pytest.mark.asyncio
 async def test_corgi(corgi, random_string):
     text = random_string + ' ' + corgi + ' ' + random_string
-    result = await triggers.corgi(text)
+    msg = {"text": text}
+    result = await triggers.corgi(msg)
     assert "corgi" in result
 
 
@@ -109,7 +121,8 @@ async def test_corgi(corgi, random_string):
 @pytest.mark.asyncio
 async def test_shibe(shibe, random_string):
     text = random_string + ' ' + shibe + ' ' + random_string
-    result = await triggers.shibe(text)
+    msg = {"text": text}
+    result = await triggers.shibe(msg)
     assert "shibe" in result
 
 
@@ -117,7 +130,8 @@ async def test_shibe(shibe, random_string):
 @pytest.mark.asyncio
 async def test_toy(toy, random_string):
     text = random_string + ' ' + toy + ' ' + random_string
-    result = await triggers.toy(text)
+    msg = {"text": text}
+    result = await triggers.toy(msg)
     assert "toy" in result
 
 
@@ -125,7 +139,8 @@ async def test_toy(toy, random_string):
 @pytest.mark.asyncio
 async def test_pug(pug, random_string):
     text = random_string + ' ' + pug + ' ' + random_string
-    result = await triggers.pug(text)
+    msg = {"text": text}
+    result = await triggers.pug(msg)
     assert "pug" in result
 
 
@@ -133,5 +148,6 @@ async def test_pug(pug, random_string):
 @pytest.mark.asyncio
 async def test_terrier(terrier, random_string):
     text = random_string + ' ' + terrier + ' ' + random_string
-    result = await triggers.terrier(text)
+    msg = {"text": text}
+    result = await triggers.terrier(msg)
     assert "terrier" in result
