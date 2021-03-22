@@ -9,12 +9,11 @@ class NameNotFound(BaseException):
     pass
 
 
-def get_table():
+def get_page():
     # Connects and returns a table with scores.
     client = NotionClient(token_v2=NOTION_TOKEN)
     page = client.get_block(NOTION_DB_PAGE_URL)
-    table = page.views[0].collection
-    return table
+    return page
 
 
 def get_all_scores():
@@ -24,19 +23,33 @@ def get_all_scores():
 
 
 def add_record(user: dict, score: int = 0):
-    table = get_table()
-    row = table.add_row()
-    row.telegram_id = str(user["id"])
-    row.first_name = user["first_name"]
-    row.last_name = user.get("last_name", "")
-    row.username = user.get("username", "")
-    row.credit = score
-    print(f"Created new record {row.first_name} with score {score}")
+    page = get_page()
+    page.collection.add_row(
+        telegram_id=str(user["id"]),
+        first_name=user["first_name"],
+        last_name=user.get("last_name", ""),
+        username=user.get("username", ""),
+        credit=score
+    )
+    print(f"Created new record {user['first_name']} with score {score}")
 
 
 def add_credits(user: dict, credits: int):
-    table = get_table()
-    search_results = table.get_rows(search=str(user["id"]))
+    page = get_page()
+    filter_params = {
+        "filters": [{
+            "filter": {
+                "value": {
+                    "type": "exact",
+                    "value": str(user["id"]),
+                },
+                "operator": "string_is"
+            },
+            "property": "title"
+        }],
+        "operator": "and"
+    }
+    search_results = page.build_query(filter=filter_params).execute()
     if not search_results:
         raise NameNotFound
     target_record = search_results[0]
