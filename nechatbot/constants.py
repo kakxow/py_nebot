@@ -6,8 +6,16 @@ import dotenv  # type: ignore
 dotenv.load_dotenv()
 TG_API_URL = "https://api.telegram.org"
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+NOTION_DB_PAGE_URL = os.getenv("PAGE_URL")
+CREDIT_FIELD_NAME = "credit"
+SOCIAL_CREDIT_INCREMENT = 20
 
 greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
+positive_credit_sticker_id = "CAACAgEAAxkBAAECFt5gWIXnVxS1ZcyzLQnK0amTzxk20wACAgADf3BGHAXMZNg3IivIHgQ"
+negative_credit_sticker_id = "CAACAgEAAxkBAAECFuJgWIYPCU1PpMMvDukUZxnVCW410QACAwADf3BGHENZiEtY50bNHgQ"
+
+
 trash = (
     "пизда",
     "хуй",
