@@ -44,8 +44,14 @@ def add_credits(user: dict, credits: int):
     print(f"Record {target_record.first_name} has score of {new_credits} now")
 
 
-def add_credits_or_record(user: dict, credits: int):
+def _add_credits_or_record(user: dict, credits: int):
     try:
         add_credits(user, credits)
     except NameNotFound:
         add_record(user, credits)
+
+
+def add_credits_or_create_record(user: dict, credits: int):
+    t = threading.Thread(target=_add_credits_or_record, args=(user, credits))
+    t.start()
+    print("Thread started")
