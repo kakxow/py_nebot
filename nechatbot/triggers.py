@@ -105,7 +105,7 @@ async def social_credit(msg: dict) -> Optional[str]:
     reply_message = msg.get("reply_to_message", "")
     print(sticker)
     if sticker and reply_message:
-        sticker_id = sticker["file_id"]
+        sticker_id = sticker["file_unique_id"]
         print(sticker_id)
         reply_user = reply_message["from"]  # No get here, reply should have this field in a chat.
         print(reply_user)
