@@ -34,14 +34,14 @@ def add_record(user: dict, score: int = 0):
 
 def add_credits(user: dict, credits: int):
     table = get_table()
-    search_results = table.get_rows(search=user["id"])
+    search_results = table.get_rows(search=str(user["id"]))
     if not search_results:
         raise NameNotFound
     target_record = search_results[0]
     current_credits = getattr(target_record, CREDIT_FIELD_NAME)
     new_credits = current_credits + credits
     setattr(target_record, CREDIT_FIELD_NAME, new_credits)
-    print("Record {target_record.first_name} has score of {new_credit} now")
+    print(f"Record {target_record.first_name} has score of {new_credits} now")
 
 
 def add_credits_or_record(user: dict, credits: int):
