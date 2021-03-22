@@ -103,9 +103,13 @@ async def terrier(msg: dict) -> Optional[str]:
 async def social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", "")
     reply_message = msg.get("reply_to_message", "")
+    print(msg.get("text", ""))
+    print(sticker)
     if sticker and reply_message:
         sticker_id = sticker["file_id"]
+        print(sticker_id)
         reply_user = reply_message["from"]  # No get here, reply should have this field in a chat.
+        print(reply_user)
         if sticker_id == constants.positive_credit_sticker_id:
             notion_utils.add_credits_or_record(reply_user, constants.SOCIAL_CREDIT_INCREMENT)
         elif sticker_id == constants.negative_credit_sticker_id:
