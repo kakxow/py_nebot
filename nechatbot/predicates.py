@@ -46,9 +46,9 @@ def is_message_ends_with_word(message: str, *word_postfixes: str) -> bool:
 
 
 def is_date(text: str) -> bool:
-    day, month, *_ = text.split(".")
     try:
-        date = dt(2000, int(month), int(day))
+        day, month, *_ = text.split(".")
+        dt(2000, int(month), int(day))
     except ValueError:
         return False
     return True

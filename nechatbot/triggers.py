@@ -139,12 +139,14 @@ async def add_birthday(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.add_birthday_command):
-        _, date = message.split()
-        if not is_date(date):
-            return "Please enter valid date - DD.MM"
-        user = msg["from"]
-        trello_calendar.update_or_add_birthday_card(chat_id, user, date)
-        return "Your birthday has been added"
+        command_args = message.split()
+        if len(command_args) >= 2:
+            _, date, *_ = message.split()
+            if is_date(date):
+                user = msg["from"]
+                trello_calendar.update_or_add_birthday_card(chat_id, user, date)
+                return "Your birthday has been added"
+        return "Please enter valid date - DD.MM"
     return None
 
 
