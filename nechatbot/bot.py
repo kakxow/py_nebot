@@ -15,7 +15,6 @@ filename = "last_update_id.txt"
 
 async def check_birthdays(bot):
     now = dt.now()
-    print(now)
     if (now.hour, now.minute, now.second) == birthday_check_time_tuple:
         print("Checking birthdays")
         await bot.congrats_today_birthdays()
@@ -36,14 +35,8 @@ class Bot:
         print("bot started")
         print(birthday_check_time_tuple)
         while True:
-            now = dt.now()
-            print(now)
-            if (now.hour, now.minute, now.second) == birthday_check_time_tuple:
-                print("Checking birthdays")
-                await self.congrats_today_birthdays()
+            await check_birthdays(self)
             updates = await self.poll()
-            print(len(updates))
-            print(dt.now())
             for update in updates:
                 await self.on_message(update.get("message", {}))
             await asyncio.sleep(0.3)
@@ -74,8 +67,12 @@ class Bot:
     async def poll(self):
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/getUpdates"))
         params = {"offset": self.last_update_id}
-        response = await self.client.get(url=url, params=params)
-        updates = json.loads(response.text)["result"]
+        try:
+            response = await self.client.get(url=url, params=params, timeout=0.5)
+        except httpx._exceptions.ReadTimeout:
+            updates = []
+        else:
+            updates = json.loads(response.text)["result"]
         if updates:
             print(len(updates), " updates received.")
             last_update = max(updates, key=lambda x: x["update_id"])
