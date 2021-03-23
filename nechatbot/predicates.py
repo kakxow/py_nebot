@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 import re
 from typing import Set
 
@@ -42,3 +43,12 @@ def is_message_ends_with_word(message: str, *word_postfixes: str) -> bool:
         return False
     last_word = match.group()
     return any(last_word == postfix.lower() for postfix in word_postfixes)
+
+
+def is_date(text: str) -> bool:
+    day, month, *_ = text.split(".")
+    try:
+        date = dt(2000, int(month), int(day))
+    except ValueError:
+        return False
+    return True

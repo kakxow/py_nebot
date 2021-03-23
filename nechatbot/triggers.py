@@ -2,7 +2,7 @@ import random
 from typing import Optional
 
 from . import constants, get_dog
-from . import trello_utils as social_credit_calc
+from . import trello_calendar, trello_social_credit
 
 
 __all__ = [
@@ -18,14 +18,17 @@ __all__ = [
     "trista",
     "net",
     "social_credit",
-    "show_social_credit"
+    "show_social_credit",
+    "add_birthday",
+    "list_all_birthdays",
 ]
 
 from .predicates import (
     is_message_contains_words,
     is_message_ends_with_word,
     is_message_contains_phrases,
-    is_message_startswith
+    is_message_startswith,
+    is_date
 )
 
 
@@ -106,15 +109,17 @@ async def terrier(msg: dict) -> Optional[str]:
 
 async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
+    chat_id = int(msg.get("chat", {}).get("id", ""))
     if is_message_startswith(message, constants.social_credit_command):
         print("Getting all credit scores.")
-        return social_credit_calc.get_all_scores_pretty()
+        return trello_social_credit.get_all_scores_pretty(chat_id)
     return None
 
 
 async def social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", "")
     reply_message = msg.get("reply_to_message", "")
+    chat_id = int(msg.get("chat", {}).get("id", ""))
     if sticker and reply_message:
         sticker_id = sticker["file_unique_id"]
         reply_user = reply_message["from"]
@@ -123,8 +128,29 @@ async def social_credit(msg: dict) -> Optional[str]:
             return None
         if sticker_id == constants.positive_credit_sticker_id:
             print("Adding credit score.")
-            social_credit_calc.add_credits_or_record(reply_user, constants.SOCIAL_CREDIT_INCREMENT)
+            trello_social_credit.add_credits_or_record(chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT)
         elif sticker_id == constants.negative_credit_sticker_id:
             print("Substracting credit score.")
-            social_credit_calc.add_credits_or_record(reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
+            trello_social_credit.add_credits_or_record(chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
+    return None
+
+
+async def add_birthday(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = int(msg.get("chat", {}).get("id", ""))
+    if is_message_startswith(message, constants.add_birthday_command):
+        _, date = message.split()
+        if not is_date(date):
+            return "Please enter valid date - DD.MM"
+        user = msg["from"]
+        trello_calendar.update_or_add_birthday_card(chat_id, user, date)
+        return "Your birthday has been added"
+    return None
+
+
+async def list_all_birthdays(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = int(msg.get("chat", {}).get("id", ""))
+    if is_message_startswith(message, constants.list_all_birthdays_command):
+        return trello_calendar.get_all_birthdays_pretty(chat_id)
     return None
