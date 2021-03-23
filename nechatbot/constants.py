@@ -7,7 +7,22 @@ dotenv.load_dotenv()
 TG_API_URL = "https://api.telegram.org"
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 
+NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+NOTION_DB_PAGE_URL = os.getenv("PAGE_URL")
+
+TRELLO_API_KEY = os.getenv("TRELLO_API_KEY")
+TRELLO_API_SECRET = os.getenv("TRELLO_API_SECRET")
+TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
+TRELLO_NECHAT_LIST_ID = os.getenv("TRELLO_NECHAT_LIST_ID")
+
+CREDIT_FIELD_NAME = "credit"
+SOCIAL_CREDIT_INCREMENT = 20
+
 greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
+positive_credit_sticker_id = "AgADAgADf3BGHA"
+negative_credit_sticker_id = "AgADAwADf3BGHA"
+
+
 trash = (
     "пизда",
     "хуй",
@@ -101,3 +116,5 @@ tractor_driver = "триста"
 change_title_prefixes = ("ето не чат", "ето нечат")
 
 no_means_no = "нет"
+
+social_credit_command = "/show_social_credit_scores"
