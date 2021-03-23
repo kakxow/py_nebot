@@ -32,7 +32,7 @@ class NameNotFound(BaseException):
 
 def get_today_birthdays() -> List[str]:
     today = dt.now()
-    today = dt(2020,7,25)
+    today = dt(2020, 7, 25)
     all_records = get_all_birthdays()
     ids = [card["id"] for card, due in all_records if due[5:10] == f"{today:%m-%d}"]
     return ids
@@ -61,7 +61,7 @@ def add_birthday_card(user: dict, date: str) -> None:
     print(f"Created new record {user['first_name']} with birthday {date}")
 
 
-def get_all_birthdays() -> List[Dict[str, str]]:
+def get_all_birthdays():
     all_records = [(json.loads(card.desc), card.due) for card in nechat_calendar.list_cards()]
     return all_records
 

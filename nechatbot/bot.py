@@ -6,6 +6,7 @@ import aiofiles  # type: ignore
 import httpx  # type: ignore
 
 from .constants import TG_API_URL
+from . import trello_utils
 
 
 filename = "last_update_id.txt"
@@ -65,16 +66,17 @@ class Bot:
             async with aiofiles.open(filename, mode="w") as f:
                 await f.write(str(self.last_update_id))
         return updates
-    
-    async def congrats_today_birthdays(self) -> Optional[str]:
-    ids = social_credit_calc.get_today_birthdays()
-    if ids:
-        chat_id = int(msg.get("chat", {}).get("id", ""))
-        chat_members = [await bot.get_chat_member(chat_id, int(id)) for id in ids]
-        usernames = [f'@{chat_member.get("user").get("username", "")}' for chat_member in chat_members]
-        text_usernames = ", ".join(usernames)
-        return f"Happy birthday {text_usernames}!"
-    return None
+
+    async def congrats_today_birthdays(self):
+        ids = trello_utils.get_today_birthdays()
+        msg = {}
+        if ids:
+            chat_id = int(msg.get("chat", {}).get("id", ""))
+            chat_members = [await self.get_chat_member(chat_id, int(id)) for id in ids]
+            usernames = [f'@{chat_member.get("user").get("username", "")}' for chat_member in chat_members]
+            text_usernames = ", ".join(usernames)
+            return f"Happy birthday {text_usernames}!"
+        return None
 
     async def on_message(self, msg: dict):
         raise NotImplementedError
