@@ -63,7 +63,7 @@ def get_all_birthdays(chat_id: int):
 def get_all_birthdays_pretty(chat_id: int):
     all_records = get_all_birthdays(chat_id)
     all_records.sort(key=lambda t: t[1])
-    text_records = [f"{r['first_name']} {r['username']}: {r['birthday']}" for r, _ in all_records]
-    text = "Nechat birthday calendar\n"
+    text_records = [f"•{r['first_name']} {r['username']}: {r['birthday']}" for r, _ in all_records]
+    text = "<b>Nechat birthday calendar</b>\n"
     record_table = "\n".join(text_records) or "Nothing to show yet!"
     return text + record_table
