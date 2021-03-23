@@ -118,6 +118,9 @@ async def social_credit(msg: dict) -> Optional[str]:
     if sticker and reply_message:
         sticker_id = sticker["file_unique_id"]
         reply_user = reply_message["from"]
+        message_user = msg["from"]
+        if reply_user == message_user:
+            return None
         if sticker_id == constants.positive_credit_sticker_id:
             print("Adding credit score.")
             social_credit_calc.add_credits_or_record(reply_user, constants.SOCIAL_CREDIT_INCREMENT)
