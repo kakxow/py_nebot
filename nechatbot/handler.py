@@ -24,6 +24,6 @@ async def on_message(bot, msg: dict):
 
     callable_triggers = (getattr(triggers, trigger) for trigger in triggers.__all__)
     for trigger in callable_triggers:
-        message = await trigger(msg, bot)
+        message = await trigger(msg)
         if message:
             return await bot.send_message(chat_id, message)
