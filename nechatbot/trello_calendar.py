@@ -6,7 +6,6 @@ from .trello_main import get_list
 
 def get_today_birthdays(chat_id: int):
     today = dt.now()
-    today = dt(2020, 7, 25)
     all_records = get_all_birthdays(chat_id)
     ids = [card["id"] for card, due in all_records if due[5:10] == f"{today:%m-%d}"]
     return ids
