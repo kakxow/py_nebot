@@ -1,5 +1,6 @@
 import json
 import threading
+from typing import Dict, List, Union
 
 from trello import TrelloClient  # type: ignore
 
@@ -11,14 +12,14 @@ client = TrelloClient(
     api_secret=TRELLO_API_SECRET,
     token=TRELLO_TOKEN
 )
+nechat_list = client.get_list(TRELLO_NECHAT_LIST_ID)
 
 
 class NameNotFound(BaseException):
     pass
 
 
-def get_all_scores() -> list:
-    nechat_list = client.get_list(TRELLO_NECHAT_LIST_ID)
+def get_all_scores() -> List[Dict[str, Union[str, int]]]:
     all_records = [json.loads(card.desc) for card in nechat_list.list_cards_iter() if card.desc.startswith("{")]
     all_records.sort(key=lambda c: c[CREDIT_FIELD_NAME])
     return all_records
@@ -38,23 +39,21 @@ def add_record(user: dict, score: int = 0) -> None:
         "username": user.get("username", ""),
         CREDIT_FIELD_NAME: score
     }
-    nechat_list = client.get_list(TRELLO_NECHAT_LIST_ID)
-    nechat_list.add_card(name=str(user["id"]), desc=json.dumps(card_data))
+    card_name = f"{user['id']} {user['first_name']}"
+    nechat_list.add_card(name=card_name, desc=json.dumps(card_data))
     print(f"Created new record {user['first_name']} with score {score}")
 
 
-def check_id(card, id: str) -> bool:
+def check_id(card, id: Union[str, int]) -> bool:
     try:
-        card_data = json.loads(card.desc)
-        assert isinstance(card_data, dict)
-    except Exception:
+        id_from_card, _ = card.name.split()
+    except ValueError:
         return False
-    return card_data["id"] == id
+    return id_from_card == str(id)
 
 
 def add_credits(user: dict, credits: int) -> None:
-    nechat_list = client.get_list(TRELLO_NECHAT_LIST_ID)
-    search_results = [card for card in nechat_list.list_cards() if check_id(card, str(user["id"]))]
+    search_results = [card for card in nechat_list.list_cards() if check_id(card, user["id"])]
     if not search_results:
         raise NameNotFound
     target_card = search_results[0]
