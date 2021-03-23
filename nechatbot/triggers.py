@@ -109,7 +109,7 @@ async def terrier(msg: dict) -> Optional[str]:
 
 async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = int(msg.get("chat", {}).get("id", ""))
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.social_credit_command):
         print("Getting all credit scores.")
         return trello_social_credit.get_all_scores_pretty(chat_id)
@@ -119,7 +119,7 @@ async def show_social_credit(msg: dict) -> Optional[str]:
 async def social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", "")
     reply_message = msg.get("reply_to_message", "")
-    chat_id = int(msg.get("chat", {}).get("id", ""))
+    chat_id = msg["chat"]["id"]
     if sticker and reply_message:
         sticker_id = sticker["file_unique_id"]
         reply_user = reply_message["from"]
@@ -137,7 +137,7 @@ async def social_credit(msg: dict) -> Optional[str]:
 
 async def add_birthday(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = int(msg.get("chat", {}).get("id", ""))
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.add_birthday_command):
         _, date = message.split()
         if not is_date(date):
@@ -150,7 +150,7 @@ async def add_birthday(msg: dict) -> Optional[str]:
 
 async def list_all_birthdays(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = int(msg.get("chat", {}).get("id", ""))
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.list_all_birthdays_command):
         return trello_calendar.get_all_birthdays_pretty(chat_id)
     return None

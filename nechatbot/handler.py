@@ -18,6 +18,7 @@ async def on_message(bot, msg: dict):
 
     text = msg.get("text", "")
     # print(json.dumps(msg, indent=4))
+    # print(type(chat_id), chat_id)
 
     if is_message_startswith(text, *change_title_prefixes):
         return await bot.set_chat_title(chat_id, text)
