@@ -20,6 +20,7 @@ __all__ = [
     "social_credit",
     "show_social_credit",
     "add_birthday",
+    "list_all_birthdays",
 ]
 
 from .predicates import (
@@ -144,4 +145,12 @@ async def add_birthday(msg: dict) -> Optional[str]:
         user = msg["from"]
         trello_calendar.update_or_add_birthday_card(chat_id, user, date)
         return "Your birthday has been added"
+    return None
+
+
+async def list_all_birthdays(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = int(msg.get("chat", {}).get("id", ""))
+    if is_message_startswith(message, constants.list_all_birthdays_command):
+        return trello_calendar.get_all_birthdays_pretty(chat_id)
     return None

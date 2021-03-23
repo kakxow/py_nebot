@@ -121,4 +121,5 @@ no_means_no = "нет"
 
 social_credit_command = "/show_social_credit_scores"
 add_birthday_command = "/add_my_birthday"
+list_all_birthdays_command = "/all_birthdays"
 birthday_check_time_tuple = (9, 0, 0)
