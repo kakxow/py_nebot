@@ -27,7 +27,7 @@ def get_all_scores() -> List[Dict[str, Union[str, int]]]:
 
 def get_all_scores_pretty() -> str:
     scores = get_all_scores()
-    text_scores = [f"{record['first_name']} {record['username']} - {record[CREDIT_FIELD_NAME]}" for record in scores]
+    text_scores = [f"{record['first_name']} {record['username']}: {record[CREDIT_FIELD_NAME]}" for record in scores]
     text = "Nechat Social Credit System scores:\n"
     score_table = "\n".join(text_scores) or "Nothing to show yet!"
     return text + score_table
