@@ -25,6 +25,7 @@ from .predicates import (
     is_message_contains_words,
     is_message_ends_with_word,
     is_message_contains_phrases,
+    is_message_startswith
 )
 
 
@@ -105,7 +106,7 @@ async def terrier(msg: dict) -> Optional[str]:
 
 async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    if message == constants.social_credit_command:
+    if is_message_startswith(message, constants.social_credit_command):
         print("Getting all credit scores.")
         return social_credit_calc.get_all_scores_pretty()
     return None
