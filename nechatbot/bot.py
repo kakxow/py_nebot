@@ -69,7 +69,7 @@ class Bot:
         params = {"offset": self.last_update_id}
         try:
             response = await self.client.get(url=url, params=params, timeout=0.5)
-        except httpx._exceptions.ReadTimeout:
+        except (httpx._exceptions.ReadTimeout, httpx._exceptions.ConnectTimeout):
             updates = []
         else:
             updates = json.loads(response.text)["result"]
