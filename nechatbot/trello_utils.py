@@ -21,14 +21,16 @@ class NameNotFound(BaseException):
 
 def get_all_scores() -> List[Dict[str, Union[str, int]]]:
     all_records = [json.loads(card.desc) for card in nechat_list.list_cards_iter() if card.desc.startswith("{")]
-    all_records.sort(key=lambda c: c[CREDIT_FIELD_NAME])
+    all_records.sort(key=lambda c: c[CREDIT_FIELD_NAME], reverse=True)
     return all_records
 
 
 def get_all_scores_pretty() -> str:
     scores = get_all_scores()
     text_scores = [f"{record['first_name']} {record['username']} - {record[CREDIT_FIELD_NAME]}" for record in scores]
-    return "\n".join(text_scores)
+    text = "Nechat Social Credit System scores:"
+    score_table = "\n".join(text_scores) or "\nNothing to show yet!"
+    return text + score_table
 
 
 def add_record(user: dict, score: int = 0) -> None:
