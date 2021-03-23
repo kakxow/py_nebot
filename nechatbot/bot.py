@@ -47,6 +47,12 @@ class Bot:
         response = await self.client.post(url, json=data)
         return response
 
+    async def get_chat_member(self, chat_id: str, user_id: int) -> dict:
+        data = {"chat_id": chat_id, "user_id": user_id}
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/getChatMember"))
+        response = await self.client.post(url, json=data)
+        return json.loads(response.text)["result"]
+
     async def poll(self):
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/getUpdates"))
         params = {"offset": self.last_update_id}
@@ -59,6 +65,16 @@ class Bot:
             async with aiofiles.open(filename, mode="w") as f:
                 await f.write(str(self.last_update_id))
         return updates
+    
+    async def congrats_today_birthdays(self) -> Optional[str]:
+    ids = social_credit_calc.get_today_birthdays()
+    if ids:
+        chat_id = int(msg.get("chat", {}).get("id", ""))
+        chat_members = [await bot.get_chat_member(chat_id, int(id)) for id in ids]
+        usernames = [f'@{chat_member.get("user").get("username", "")}' for chat_member in chat_members]
+        text_usernames = ", ".join(usernames)
+        return f"Happy birthday {text_usernames}!"
+    return None
 
     async def on_message(self, msg: dict):
         raise NotImplementedError

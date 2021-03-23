@@ -14,6 +14,7 @@ TRELLO_API_KEY = os.getenv("TRELLO_API_KEY")
 TRELLO_API_SECRET = os.getenv("TRELLO_API_SECRET")
 TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
 TRELLO_NECHAT_LIST_ID = os.getenv("TRELLO_NECHAT_LIST_ID")
+TRELLO_NECHAT_CALENDAR_ID = os.getenv("TRELLO_NECHAT_CALENDAR_ID")
 
 CREDIT_FIELD_NAME = "credit"
 SOCIAL_CREDIT_INCREMENT = 20
@@ -118,3 +119,4 @@ change_title_prefixes = ("ето не чат", "ето нечат")
 no_means_no = "нет"
 
 social_credit_command = "/show_social_credit_scores"
+add_birthday_command = "/add_my_birthday"

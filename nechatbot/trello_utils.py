@@ -1,10 +1,18 @@
 import json
 import threading
+from datetime import datetime as dt
 from typing import Dict, List, Union
 
 from trello import TrelloClient  # type: ignore
 
-from .constants import CREDIT_FIELD_NAME, TRELLO_API_KEY, TRELLO_API_SECRET, TRELLO_TOKEN, TRELLO_NECHAT_LIST_ID
+from .constants import (
+    CREDIT_FIELD_NAME,
+    TRELLO_API_KEY,
+    TRELLO_API_SECRET,
+    TRELLO_TOKEN,
+    TRELLO_NECHAT_LIST_ID,
+    TRELLO_NECHAT_CALENDAR_ID
+)
 
 
 client = TrelloClient(
@@ -13,10 +21,58 @@ client = TrelloClient(
     token=TRELLO_TOKEN
 )
 nechat_list = client.get_list(TRELLO_NECHAT_LIST_ID)
+board = client.get_board()
+board.get_lists()
+nechat_calendar = client.get_list(TRELLO_NECHAT_CALENDAR_ID)
 
 
 class NameNotFound(BaseException):
     pass
+
+
+def get_today_birthdays() -> List[str]:
+    today = dt.now()
+    today = dt(2020,7,25)
+    all_records = get_all_birthdays()
+    ids = [card["id"] for card, due in all_records if due[5:10] == f"{today:%m-%d}"]
+    return ids
+
+
+def convert_date_for_trello(date: str) -> str:
+    day, month = date.split(".")
+    return f"2090-{month}-{day}"
+
+
+def add_birthday_card(user: dict, date: str) -> None:
+    # Check for unique.
+    card_data = {
+        "id": str(user["id"]),
+        "first_name": user["first_name"],
+        "last_name": user.get("last_name", ""),
+        "username": user.get("username", ""),
+        "birthday": date
+    }
+    card_name = f"{user['id']} {user['first_name']}"
+    nechat_calendar.add_card(
+        name=card_name,
+        desc=json.dumps(card_data),
+        due=convert_date_for_trello(date)
+    )
+    print(f"Created new record {user['first_name']} with birthday {date}")
+
+
+def get_all_birthdays() -> List[Dict[str, str]]:
+    all_records = [(json.loads(card.desc), card.due) for card in nechat_calendar.list_cards()]
+    return all_records
+
+
+def get_all_birthdays_pretty():
+    all_records = get_all_birthdays()
+    all_records.sort(key=lambda t: t[1])
+    text_records = [f"{r['first_name']} {r['username']}: {r['birthday']}" for r, _ in all_records]
+    text = "Nechat birthday calendar\n"
+    record_table = "\n".join(text_records) or "Nothing to show yet!"
+    return text + record_table
 
 
 def get_all_scores() -> List[Dict[str, Union[str, int]]]:

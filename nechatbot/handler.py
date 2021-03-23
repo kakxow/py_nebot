@@ -1,3 +1,5 @@
+import json
+
 from . import triggers
 from .constants import greeting_sticker, change_title_prefixes
 from .predicates import is_message_startswith
@@ -15,12 +17,13 @@ async def on_message(bot, msg: dict):
         )
 
     text = msg.get("text", "")
+    print(json.dumps(msg, indent=4))
 
     if is_message_startswith(text, *change_title_prefixes):
         return await bot.set_chat_title(chat_id, text)
 
     callable_triggers = (getattr(triggers, trigger) for trigger in triggers.__all__)
     for trigger in callable_triggers:
-        message = await trigger(msg)
+        message = await trigger(msg, bot)
         if message:
             return await bot.send_message(chat_id, message)
