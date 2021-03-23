@@ -1,15 +1,24 @@
 import asyncio
+from datetime import datetime as dt
 import json
 from urllib.parse import urljoin, quote
 
 import aiofiles  # type: ignore
 import httpx  # type: ignore
 
-from .constants import TG_API_URL
-from . import trello_utils
+from .constants import TG_API_URL, birthday_check_time_tuple
+from . import trello_main, trello_calendar
 
 
 filename = "last_update_id.txt"
+
+
+async def check_birthdays(bot):
+    now = dt.now()
+    print(now)
+    if (now.hour, now.minute, now.second) == birthday_check_time_tuple:
+        print("Checking birthdays")
+        await bot.congrats_today_birthdays()
 
 
 class Bot:
@@ -25,8 +34,16 @@ class Bot:
 
     async def start(self):
         print("bot started")
+        print(birthday_check_time_tuple)
         while True:
+            now = dt.now()
+            print(now)
+            if (now.hour, now.minute, now.second) == birthday_check_time_tuple:
+                print("Checking birthdays")
+                await self.congrats_today_birthdays()
             updates = await self.poll()
+            print(len(updates))
+            print(dt.now())
             for update in updates:
                 await self.on_message(update.get("message", {}))
             await asyncio.sleep(0.3)
@@ -68,15 +85,18 @@ class Bot:
         return updates
 
     async def congrats_today_birthdays(self):
-        ids = trello_utils.get_today_birthdays()
-        msg = {}
-        if ids:
-            chat_id = int(msg.get("chat", {}).get("id", ""))
-            chat_members = [await self.get_chat_member(chat_id, int(id)) for id in ids]
-            usernames = [f'@{chat_member.get("user").get("username", "")}' for chat_member in chat_members]
-            text_usernames = ", ".join(usernames)
-            return f"Happy birthday {text_usernames}!"
-        return None
+        print("Getting chat_ids from trello board")
+        chat_ids = trello_main.get_chat_ids_from_board()
+        for chat_id in chat_ids:
+            ids = trello_calendar.get_today_birthdays(chat_id)
+            print(f"Getting birthday ppl IDs from trello list for {chat_id}")
+            if ids:
+                chat_members = [await self.get_chat_member(chat_id, int(id)) for id in ids]
+                usernames = [f'@{chat_member.get("user").get("username", "")}' for chat_member in chat_members]
+                text_usernames = ", ".join(usernames)
+                await self.send_message(chat_id, f"Happy birthday {text_usernames}!")
+                response = await self.set_chat_title(chat_id, f"Ето не чат с ДР {text_usernames}!")
+                print(response)
 
     async def on_message(self, msg: dict):
         raise NotImplementedError
