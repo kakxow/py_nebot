@@ -127,11 +127,9 @@ async def add_social_credit(msg: dict) -> Optional[str]:
         if reply_user == message_user:
             return None
         if sticker_id == constants.positive_credit_sticker_id:
-            print("Adding credit score.")
-            social_credit.add_credits_or_record(chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit.update_or_add_social_credit(chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT)
         elif sticker_id == constants.negative_credit_sticker_id:
-            print("Substracting credit score.")
-            social_credit.add_credits_or_record(chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit.update_or_add_social_credit(chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
     return None
 
 
@@ -144,8 +142,8 @@ async def add_birthday(msg: dict) -> Optional[str]:
             _, date, *_ = message.split()
             if is_date(date):
                 user = msg["from"]
-                calendar.update_or_add_birthday_card(chat_id, user, date)
-                return "Your birthday has been added"
+                action = calendar.update_or_add_birthday(chat_id, user, date)
+                return f"{action} {user['first_name']}'s card with birthday date {date}"
         return "Please enter valid date - DD.MM"
     return None
 
