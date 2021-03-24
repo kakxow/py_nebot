@@ -39,7 +39,7 @@ class Bot:
 
     async def send_message(self, chat_id, text, **kwargs):
         print("Message to send - ", text)
-        data = {"text": text, "chat_id": chat_id, **kwargs}
+        data = {"text": text, "chat_id": chat_id, "parse_mode":"HTML", **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendMessage"))
         await self.client.post(url, json=data)
 
