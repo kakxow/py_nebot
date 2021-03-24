@@ -1,5 +1,6 @@
 from datetime import datetime as dt
 import json
+import re
 
 from .constants import birthday_check_time_tuple
 from .trello_main import get_chat_ids_from_board, get_list
@@ -13,7 +14,7 @@ def get_today_birthdays(chat_id: int):
 
 
 def convert_date_for_trello(date: str) -> str:
-    day, month = date.split(".")
+    day, month = re.split(r"\D", date)
     return f"2090-{month}-{day}"
 
 
