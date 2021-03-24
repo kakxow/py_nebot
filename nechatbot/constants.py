@@ -7,14 +7,9 @@ dotenv.load_dotenv()
 TG_API_URL = "https://api.telegram.org"
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-NOTION_DB_PAGE_URL = os.getenv("PAGE_URL")
-
 TRELLO_API_KEY = os.getenv("TRELLO_API_KEY")
 TRELLO_API_SECRET = os.getenv("TRELLO_API_SECRET")
 TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
-TRELLO_NECHAT_LIST_ID = os.getenv("TRELLO_NECHAT_LIST_ID")
-TRELLO_NECHAT_CALENDAR_ID = os.getenv("TRELLO_NECHAT_CALENDAR_ID")
 TRELLO_NECHAT_BOARD = os.getenv("TRELLO_NECHAT_BOARD")
 
 CREDIT_FIELD_NAME = "credit"
@@ -122,4 +117,4 @@ no_means_no = "нет"
 social_credit_command = "/show_social_credit_scores"
 add_birthday_command = "/add_my_birthday"
 list_all_birthdays_command = "/all_birthdays"
-birthday_check_time_tuple = (9, 0, 0)
+birthday_check_time_tuple = (6, 0, 0)

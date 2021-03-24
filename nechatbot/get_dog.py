@@ -8,4 +8,4 @@ async def get(url: str) -> str:
     if "shibe" in url:
         return data[0]
     else:
-        return data["message"]
+        return data["message"]  # type: ignore
