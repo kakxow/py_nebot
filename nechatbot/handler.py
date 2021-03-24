@@ -1,7 +1,8 @@
-import json
+import asyncio
 
 from . import triggers
-from .constants import greeting_sticker, change_title_prefixes
+from .constants import greeting_sticker, change_title_prefixes, report_message_delete_delay
+from .delayed_delete import delete_message_delayed
 from .predicates import is_message_startswith
 
 
@@ -22,8 +23,10 @@ async def on_message(bot, msg: dict) -> None:
         if is_message_startswith(text, *change_title_prefixes):
             return await bot.set_chat_title(chat_id, text)
 
-        callable_triggers = (getattr(triggers, trigger) for trigger in triggers.__all__)
-        for trigger in callable_triggers:
-            message = await trigger(msg)
+        for trigger_name in triggers.__all__:
+            callable_trigger = getattr(triggers, trigger_name)
+            message = await callable_trigger(msg)
             if message:
-                return await bot.send_message(chat_id, message)
+                sent_message = await bot.send_message(chat_id, message)
+                if trigger_name in triggers.auto_delete_list:
+                    asyncio.ensure_future(delete_message_delayed(bot, chat_id, sent_message["message_id"], report_message_delete_delay))
