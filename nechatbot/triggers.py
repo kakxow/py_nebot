@@ -117,8 +117,8 @@ async def show_social_credit(msg: dict) -> Optional[str]:
 
 
 async def social_credit(msg: dict) -> Optional[str]:
-    sticker = msg.get("sticker", "")
-    reply_message = msg.get("reply_to_message", "")
+    sticker = msg.get("sticker", {})
+    reply_message = msg.get("reply_to_message", {})
     chat_id = msg["chat"]["id"]
     if sticker and reply_message:
         sticker_id = sticker["file_unique_id"]
