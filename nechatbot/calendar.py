@@ -19,7 +19,6 @@ def get_all_birthdays_pretty(chat_id: int) -> str:
     """
     cards = get_all_cards(chat_id, "Calendar")
     all_birthdays = [(json.loads(card.desc), card.due) for card in cards]
-    print(all_birthdays)
     all_birthdays.sort(key=lambda t: t[1])
     text_birthdays = [f"•{r['first_name']} {r['username']}: {r['birthday']}" for r, _ in all_birthdays]
     text = "<b>Nechat birthday calendar</b>\n"
