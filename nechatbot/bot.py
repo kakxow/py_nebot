@@ -39,9 +39,10 @@ class Bot:
 
     async def send_message(self, chat_id, text, **kwargs) -> None:
         print("Message to send - ", text)
-        data = {"text": text, "chat_id": chat_id, "parse_mode":"HTML", **kwargs}
+        data = {"text": text, "chat_id": chat_id, "parse_mode": "HTML", **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendMessage"))
-        await self.client.post(url, json=data)
+        response = await self.client.post(url, json=data)
+        return json.loads(response.text)["result"]
 
     async def set_chat_title(self, chat_id: str, text: str) -> None:
         data = {"title": text, "chat_id": chat_id}
@@ -72,6 +73,11 @@ class Bot:
             async with aiofiles.open(filename, mode="w") as f:
                 await f.write(str(self.last_update_id))
         return updates
+
+    async def delete_message(self, chat_id: int, message_id: int) -> None:
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/deleteMessage"))
+        data = {"chat_id": chat_id, "message_id": message_id}
+        await self.client.post(url, json=data)
 
     async def on_message(self, msg: dict):
         raise NotImplementedError
