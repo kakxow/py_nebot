@@ -2,7 +2,7 @@ import random
 from typing import Optional
 
 from . import constants, get_dog
-from . import trello_calendar, trello_social_credit
+from . import calendar, social_credit
 
 
 __all__ = [
@@ -112,7 +112,7 @@ async def show_social_credit(msg: dict) -> Optional[str]:
     chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.social_credit_command):
         print("Getting all credit scores.")
-        return trello_social_credit.get_all_scores_pretty(chat_id)
+        return social_credit.get_all_scores_pretty(chat_id)
     return None
 
 
@@ -128,10 +128,10 @@ async def social_credit(msg: dict) -> Optional[str]:
             return None
         if sticker_id == constants.positive_credit_sticker_id:
             print("Adding credit score.")
-            trello_social_credit.add_credits_or_record(chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit.add_credits_or_record(chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT)
         elif sticker_id == constants.negative_credit_sticker_id:
             print("Substracting credit score.")
-            trello_social_credit.add_credits_or_record(chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit.add_credits_or_record(chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
     return None
 
 
@@ -144,7 +144,7 @@ async def add_birthday(msg: dict) -> Optional[str]:
             _, date, *_ = message.split()
             if is_date(date):
                 user = msg["from"]
-                trello_calendar.update_or_add_birthday_card(chat_id, user, date)
+                calendar.update_or_add_birthday_card(chat_id, user, date)
                 return "Your birthday has been added"
         return "Please enter valid date - DD.MM"
     return None
@@ -154,5 +154,5 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.list_all_birthdays_command):
-        return trello_calendar.get_all_birthdays_pretty(chat_id)
+        return calendar.get_all_birthdays_pretty(chat_id)
     return None

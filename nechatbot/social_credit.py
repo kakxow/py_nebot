@@ -37,7 +37,7 @@ def add_record(chat_id: int, user: dict, score: int = 0) -> None:
 
 def check_id(card, id: Union[str, int]) -> bool:
     try:
-        id_from_card, _ = card.name.split()
+        id_from_card, *_ = card.name.split()
     except ValueError:
         return False
     return id_from_card == str(id)
