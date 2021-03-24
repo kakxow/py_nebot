@@ -22,8 +22,10 @@ async def on_message(bot, msg: dict) -> None:
         if is_message_startswith(text, *change_title_prefixes):
             return await bot.set_chat_title(chat_id, text)
 
-        callable_triggers = (getattr(triggers, trigger) for trigger in triggers.__all__)
+        callable_triggers = (getattr(triggers, trigger_name) for trigger_name in triggers.__all__)
         for trigger in callable_triggers:
             message = await trigger(msg)
             if message:
-                return await bot.send_message(chat_id, message)
+                sent_message = await bot.send_message(chat_id, message)
+                if 
+                return

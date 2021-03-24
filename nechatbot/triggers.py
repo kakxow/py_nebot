@@ -22,6 +22,7 @@ __all__ = [
     "add_birthday",
     "list_all_birthdays",
 ]
+auto_delete_list = ["show_social_credit"]
 
 from .predicates import (
     is_message_contains_words,
