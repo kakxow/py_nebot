@@ -17,7 +17,7 @@ __all__ = [
     "terrier",
     "trista",
     "net",
-    "social_credit",
+    "add_social_credit",
     "show_social_credit",
     "add_birthday",
     "list_all_birthdays",
@@ -116,7 +116,7 @@ async def show_social_credit(msg: dict) -> Optional[str]:
     return None
 
 
-async def social_credit(msg: dict) -> Optional[str]:
+async def add_social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", {})
     reply_message = msg.get("reply_to_message", {})
     chat_id = msg["chat"]["id"]

@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 import json
 import re
+from typing import Tuple
 
 from .constants import birthday_check_time_tuple
 from .trello_main import get_chat_ids_from_board, get_list
@@ -13,8 +14,13 @@ def get_today_birthdays(chat_id: int):
     return ids
 
 
+def day_month_from_date(date: str) -> Tuple[int, int]:
+    day, month, *_ = [int(el) for el in re.split(r"\D", date)]
+    return day, month
+
+
 def convert_date_for_trello(date: str) -> str:
-    day, month = re.split(r"\D", date)
+    day, month = day_month_from_date(date)
     return f"2090-{month}-{day}"
 
 
@@ -33,8 +39,8 @@ def update_or_add_birthday_card(chat_id: int, user: dict, date: str) -> None:
         card_data = json.loads(card.desc)
         card_data["birthday"] = date
         card.set_description(json.dumps(card_data))
-        day, month = date.split(".")
-        card.set_due(dt(2090, int(month), int(day)))
+        day, month = day_month_from_date(date)
+        card.set_due(dt(2090, month, day))
         action = "Updated a"
     else:
         calendar_list = get_list(chat_id, "Calendar")
