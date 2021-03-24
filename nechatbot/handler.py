@@ -5,7 +5,7 @@ from .constants import greeting_sticker, change_title_prefixes
 from .predicates import is_message_startswith
 
 
-async def on_message(bot, msg: dict):
+async def on_message(bot, msg: dict) -> None:
     chat = msg.get("chat", {})
     chat_id = chat.get("id", "")
 
