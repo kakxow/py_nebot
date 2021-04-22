@@ -2,7 +2,6 @@ import asyncio
 
 from . import triggers
 from .constants import greeting_sticker, change_title_prefixes, report_message_delete_delay
-from .delayed_delete import delete_message_delayed
 from .predicates import is_message_startswith
 
 
@@ -29,4 +28,5 @@ async def on_message(bot, msg: dict) -> None:
             if message:
                 sent_message = await bot.send_message(chat_id, message)
                 if trigger_name in triggers.auto_delete_list:
-                    asyncio.ensure_future(delete_message_delayed(bot, chat_id, sent_message["message_id"], report_message_delete_delay))
+                    await asyncio.sleep(report_message_delete_delay)
+                    await bot.delete_message(chat_id, sent_message["message_id"])
