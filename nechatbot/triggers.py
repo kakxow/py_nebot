@@ -26,6 +26,7 @@ auto_delete_list = ["show_social_credit"]
 
 from .predicates import (
     is_message_contains_words,
+    is_message_contains_words_and_emojis,
     is_message_ends_with_word,
     is_message_contains_phrases,
     is_message_startswith,
@@ -73,7 +74,7 @@ async def base_dog_trigger(
     url: str, msg: dict, *trigger_words: str
 ) -> Optional[str]:
     message = msg.get("text", "").lower()
-    if is_message_contains_words(message, *trigger_words):
+    if is_message_contains_words_and_emojis(message, *trigger_words):
         return await get_dog.get(url)
     return None
 
