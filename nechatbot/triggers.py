@@ -12,6 +12,7 @@ __all__ = [
     "corgi",
     "shibe",
     "random_dog",
+    "random_frog",
     # "toy",
     "pug",
     "terrier",
