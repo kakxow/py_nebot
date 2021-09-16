@@ -83,6 +83,7 @@ async def random_frog(msg: dict) -> Optional[str]:
     random_frog_url = "https://www.generatormix.com/random-frogs"
     message = msg.get("text", "").lower()
     if is_message_contains_words_and_emojis(message, *constants.random_frog):
+        print("message = ", message)
         return await get_frog.get(random_frog_url)
     return None
 
