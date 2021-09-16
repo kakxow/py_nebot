@@ -85,7 +85,9 @@ async def random_dog(msg: dict) -> Optional[str]:
 
 
 async def corgi(msg: dict) -> Optional[str]:
-    corgi_url = "https://dog.ceo/api/breed/corgi/images/random"
+    corgi_url = random.choice(("https://dog.ceo/api/breed/corgi/images/random",
+                               "https://dog.ceo/api/breed/pembroke/images/random"))
+    # corgi_url = "https://dog.ceo/api/breed/corgi/images/random"
     return await base_dog_trigger(corgi_url, msg, *constants.corgi)
 
 
