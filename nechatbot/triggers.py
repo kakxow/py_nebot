@@ -1,6 +1,7 @@
 import random
 from typing import Optional
 
+from .location import change_location, get_people_from_location
 from . import constants, get_dog, get_frog
 from . import calendar, social_credit
 from .predicates import (
@@ -31,6 +32,8 @@ __all__ = [
     "add_birthday",
     "list_all_birthdays",
     "add_birthday_inline",
+    "add_location",
+    "ping_location"
 ]
 auto_delete_list = ["show_social_credit"]
 
@@ -181,3 +184,33 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
     if is_message_startswith(message, constants.list_all_birthdays_command):
         return calendar.get_all_birthdays_pretty(chat_id)
     return None
+
+
+async def add_location(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    via_bot = msg.get("via_bot", {})
+    bot_name = via_bot.get("first_name", "")
+
+    if bot_name in constants.MY_BOTS:
+        user = msg["from"]
+        if is_message_contains_words(message, "moscow"):
+            change_location(chat_id, user, "msk")
+        elif is_message_contains_words(message, "petersburg"):
+            change_location(chat_id, user, "spb")
+    return None
+
+
+async def ping_location(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    if is_message_startswith(message, "@мск", "@msk"):
+        loc = "msk"
+    elif is_message_startswith(message, "@спб", "@spb"):
+        loc = "spb"
+    else:
+        return None
+    id_usernames = get_people_from_location(chat_id, loc)
+    # print(id_usernames)
+    return ", ".join([f'<a href="tg://user?id={user_id}">{username}</a>' for user_id, username in id_usernames])
+    # return '<a href="tg://user?id=65960428">1</a>'

@@ -1,6 +1,9 @@
 from .predicates import is_date
 
-__all__ = ["add_birthday"]
+__all__ = [
+    "add_birthday",
+    "choose_city"
+]
 
 
 async def add_birthday(inline_query) -> list:
@@ -30,3 +33,39 @@ async def add_birthday(inline_query) -> list:
             }
             return [inline_query_result]
     return []
+
+
+async def choose_city(inline_query):
+    text = inline_query["query"]
+    if not text:
+        text_message_content_msk = {
+            "message_text": "I'm in Moscow now!"
+        }
+        text_message_content_spb = {
+            "message_text": "I'm in St. Petersburg now!"
+        }
+        inline_keyboard_markup = {
+            "inline_keyboard": [
+                [
+                    {
+                        "text": "Where are you?",
+                        "switch_inline_query_current_chat": "",
+                    }
+                ]
+            ]
+        }
+        inline_query_result_msk = {
+            "type": "article",
+            "id": "msk",
+            "title": "msk",
+            "input_message_content": text_message_content_msk,
+            "reply_markup": inline_keyboard_markup,
+        }
+        inline_query_result_spb = {
+            "type": "article",
+            "id": "spb",
+            "title": "spb",
+            "input_message_content": text_message_content_spb,
+            "reply_markup": inline_keyboard_markup,
+        }
+        return [inline_query_result_msk, inline_query_result_spb]
