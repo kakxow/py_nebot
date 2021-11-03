@@ -204,13 +204,11 @@ async def add_location(msg: dict) -> Optional[str]:
 async def ping_location(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
-    if is_message_startswith(message, "@мск", "@msk"):
+    if is_message_contains_words(message, "@мск", "@msk"):
         loc = "msk"
-    elif is_message_startswith(message, "@спб", "@spb"):
+    elif is_message_contains_words(message, "@спб", "@spb"):
         loc = "spb"
     else:
         return None
     id_usernames = get_people_from_location(chat_id, loc)
-    # print(id_usernames)
     return ", ".join([f'<a href="tg://user?id={user_id}">{username}</a>' for user_id, username in id_usernames])
-    # return '<a href="tg://user?id=65960428">1</a>'
