@@ -160,6 +160,20 @@ async def add_birthday(msg: dict) -> Optional[str]:
     return None
 
 
+async def add_birthday_inline(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    via_bot = msg.get("via_bot", {})
+    bot_name = via_bot.get("first_name", "")
+
+    if bot_name in constants.MY_BOTS:
+        date = message[-5:]
+        if is_date(date):
+            user = msg["from"]
+            calendar.update_or_add_birthday(chat_id, user, date)
+    return None
+
+
 async def list_all_birthdays(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]

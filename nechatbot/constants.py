@@ -21,6 +21,7 @@ greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
 positive_credit_sticker_id = "AgADAgADf3BGHA"
 negative_credit_sticker_id = "AgADAwADf3BGHA"
 
+MY_BOTS = ("mks_nechat_bot", "mks_test_bot")
 
 trash = (
     "пизда",
