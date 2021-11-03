@@ -32,7 +32,10 @@ class Bot:
             updates = await self.poll()
             for update in updates:
                 self.logger.debug("%s", update)
-                asyncio.ensure_future(self.on_message(update.get("message", {})))
+                if update.get("inline_query", {}):
+                    asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
+                else:
+                    asyncio.ensure_future(self.on_message(update.get("message", {})))
             await asyncio.sleep(0.3)
 
     async def send_sticker(self, chat_id: str, sticker_id: str, **kwargs) -> None:
@@ -82,5 +85,13 @@ class Bot:
         data = {"chat_id": chat_id, "message_id": message_id}
         await self.client.post(url, json=data)
 
+    async def answer_inline_query(self, inline_query_id: str, results: list):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/answerInlineQuery"))
+        data = {"inline_query_id": inline_query_id, "results": results}
+        await self.client.post(url, json=data)
+
     async def on_message(self, msg: dict):
+        raise NotImplementedError
+
+    async def on_inline_query(self, inline_query: dict):
         raise NotImplementedError

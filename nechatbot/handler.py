@@ -1,6 +1,6 @@
 import asyncio
 
-from . import triggers
+from . import triggers, inline_commands
 from .constants import greeting_sticker, change_title_prefixes, report_message_delete_delay
 from .predicates import is_message_startswith
 
@@ -30,3 +30,11 @@ async def on_message(bot, msg: dict) -> None:
                 if trigger_name in triggers.auto_delete_list:
                     await asyncio.sleep(report_message_delete_delay)
                     await bot.delete_message(chat_id, sent_message["message_id"])
+
+
+async def on_inline_query(bot, inline_query):
+    for trigger_name in inline_commands.__all__:
+        inline_command = getattr(inline_commands, trigger_name)
+        inline_query_results = await inline_command(inline_query)
+        if inline_query_results:
+            await bot.answer_inline_query(inline_query["id"], inline_query_results)
