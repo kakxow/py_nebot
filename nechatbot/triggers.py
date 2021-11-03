@@ -204,9 +204,9 @@ async def add_location(msg: dict) -> Optional[str]:
 async def ping_location(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
-    if is_message_startswith(message, "@мск", "@msk"):
+    if is_message_contains_words(message, "@мск", "@msk"):
         loc = "msk"
-    elif is_message_startswith(message, "@спб", "@spb"):
+    elif is_message_contains_words(message, "@спб", "@spb"):
         loc = "spb"
     else:
         return None
