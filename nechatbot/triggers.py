@@ -3,6 +3,14 @@ from typing import Optional
 
 from . import constants, get_dog, get_frog
 from . import calendar, social_credit
+from .predicates import (
+    is_message_contains_words,
+    is_message_contains_words_and_emojis,
+    is_message_ends_with_word,
+    is_message_contains_phrases,
+    is_message_startswith,
+    is_date
+)
 
 
 __all__ = [
@@ -24,15 +32,6 @@ __all__ = [
     "list_all_birthdays",
 ]
 auto_delete_list = ["show_social_credit"]
-
-from .predicates import (
-    is_message_contains_words,
-    is_message_contains_words_and_emojis,
-    is_message_ends_with_word,
-    is_message_contains_phrases,
-    is_message_startswith,
-    is_date
-)
 
 
 async def ukraine(msg: dict) -> Optional[str]:
