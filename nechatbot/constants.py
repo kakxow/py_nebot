@@ -1,9 +1,11 @@
+import logging
 import os
 
 import dotenv  # type: ignore
 
 
 dotenv.load_dotenv()
+LOGGING_LEVEL = int(os.getenv("LOGGING_LEVEL", logging.INFO))
 TG_API_URL = "https://api.telegram.org"
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 

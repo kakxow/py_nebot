@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 from urllib.parse import urljoin, quote
 
 import aiofiles  # type: ignore
@@ -14,6 +15,7 @@ filename = "last_update_id.txt"
 
 class Bot:
     def __init__(self, token: str) -> None:
+        self.logger = logging.getLogger(__name__)
         self.client = httpx.AsyncClient(base_url=TG_API_URL)
         self.token = token
         try:
@@ -29,6 +31,7 @@ class Bot:
             await check_birthdays(self)
             updates = await self.poll()
             for update in updates:
+                self.logger.debug("%s", update)
                 asyncio.ensure_future(self.on_message(update.get("message", {})))
             await asyncio.sleep(0.3)
 
@@ -67,7 +70,7 @@ class Bot:
         else:
             updates = json.loads(response.text)["result"]
         if updates:
-            print(len(updates), " updates received.")
+            self.logger.debug("%s updates received.", len(updates))
             last_update = max(updates, key=lambda x: x["update_id"])
             self.last_update_id = last_update["update_id"] + 1
             async with aiofiles.open(filename, mode="w") as f:
