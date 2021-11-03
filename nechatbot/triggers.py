@@ -30,6 +30,7 @@ __all__ = [
     "show_social_credit",
     "add_birthday",
     "list_all_birthdays",
+    "add_birthday_inline",
 ]
 auto_delete_list = ["show_social_credit"]
 
