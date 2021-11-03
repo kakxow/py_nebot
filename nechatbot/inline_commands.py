@@ -44,6 +44,9 @@ async def choose_city(inline_query):
         text_message_content_spb = {
             "message_text": "I'm in St. Petersburg now!"
         }
+        text_message_content_remove = {
+            "message_text": "I'm in undefined now!"
+        }
         inline_keyboard_markup = {
             "inline_keyboard": [
                 [
@@ -68,4 +71,11 @@ async def choose_city(inline_query):
             "input_message_content": text_message_content_spb,
             "reply_markup": inline_keyboard_markup,
         }
-        return [inline_query_result_msk, inline_query_result_spb]
+        inline_query_result_remove = {
+            "type": "article",
+            "id": "remove",
+            "title": "remove",
+            "input_message_content": text_message_content_remove,
+            "reply_markup": inline_keyboard_markup,
+        }
+        return [inline_query_result_msk, inline_query_result_spb, inline_query_result_remove]
