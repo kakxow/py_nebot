@@ -7,7 +7,7 @@ import aiofiles  # type: ignore
 import httpx  # type: ignore
 
 from .calendar import check_birthdays
-from .constants import TG_API_URL
+from .constants import TG_API_URL, POLL_TIMEOUT
 
 
 filename = "last_update_id.txt"
@@ -17,6 +17,7 @@ class Bot:
     def __init__(self, token: str) -> None:
         self.logger = logging.getLogger(__name__)
         self.client = httpx.AsyncClient(base_url=TG_API_URL)
+        self.timeout = POLL_TIMEOUT
         self.token = token
         try:
             with open(filename, mode="r") as f:
@@ -36,7 +37,6 @@ class Bot:
                     asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
                 else:
                     asyncio.ensure_future(self.on_message(update.get("message", {})))
-            await asyncio.sleep(0.3)
 
     async def send_sticker(self, chat_id: str, sticker_id: str, **kwargs) -> None:
         data = {"sticker": sticker_id, "chat_id": chat_id, **kwargs}
@@ -65,9 +65,9 @@ class Bot:
 
     async def poll(self) -> list:
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/getUpdates"))
-        params = {"offset": self.last_update_id}
+        params = {"offset": self.last_update_id, "timeout": self.timeout}
         try:
-            response = await self.client.get(url=url, params=params, timeout=0.5)
+            response = await self.client.get(url=url, params=params, timeout=self.timeout)
         except httpx._exceptions.HTTPError:
             updates = []
         else:
