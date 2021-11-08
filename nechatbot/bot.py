@@ -27,9 +27,10 @@ class Bot:
                 self.last_update_id = int(f.read())
         except FileNotFoundError:
             self.last_update_id = 0
-        print("bot initialized")
+        self.logger.debug("bot initialized")
 
     async def start(self) -> None:
+        self.logger.debug("bot started")
         await self.delete_webhook()
         while True:
             await check_birthdays(self)
@@ -47,7 +48,7 @@ class Bot:
         await self.client.post(url, json=data)
 
     async def send_message(self, chat_id, text, **kwargs) -> None:
-        print("Message to send - ", text)
+        self.logger.debug("Message to send - %s", text)
         data = {"text": text, "chat_id": chat_id, "parse_mode": "HTML", **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendMessage"))
         response = await self.client.post(url, json=data)
