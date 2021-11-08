@@ -1,1 +1,1 @@
-web: uvicorn main:app
+web: uvicorn --workerks 1 main:app
