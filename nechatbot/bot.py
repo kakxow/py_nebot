@@ -3,7 +3,6 @@ import json
 import logging
 import threading
 from types import MethodType
-import traceback
 from urllib.parse import urljoin, quote
 
 import aiofiles  # type: ignore
@@ -24,23 +23,12 @@ class Bot:
         self.client = httpx.AsyncClient(base_url=TG_API_URL)
         self.timeout = POLL_TIMEOUT
         self.token = token
-        traceback.print_stack()
         try:
             with open(filename, mode="r") as f:
                 self.last_update_id = int(f.read())
         except FileNotFoundError:
             self.last_update_id = 0
         self.logger.debug("bot initialized")
-
-    def start_threaded(self):
-        self.logger.debug("etner start_threaded")
-
-        def _start():
-            asyncio.run(self.start())
-
-        t = threading.Thread(target=_start, daemon=True)
-        t.start()
-        self.logger.debug("exit start_threaded")
 
     async def start(self) -> None:
         self.logger.debug("bot started")
