@@ -20,6 +20,10 @@ async def github_webhook(request: asgi_tools.request.Request):
     push = await request.json()
     if not isinstance(push, dict):
         return
+    ref = push.get("ref", "")
+    if not (ref.endswith("master") or ref.endswith("main")):
+        app.logger.debug("Push to %s", ref)
+        return asgi_tools.response.Response("OK", 200)
     message = push.get("head_commit", {}).get("message", "")
     chat_message = f"Hi! New updates in bot repo: \n{message}"
     app.logger.debug(chat_message)
