@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+from types import MethodType
 from urllib.parse import urljoin, quote
 
 import aiofiles  # type: ignore
@@ -14,7 +15,9 @@ filename = "last_update_id.txt"
 
 
 class Bot:
-    def __init__(self, token: str) -> None:
+    def __init__(self, token: str, on_message, on_inline_query) -> None:
+        self.on_message = MethodType(on_message, self)
+        self.on_inline_query = MethodType(on_inline_query, self)
         self.logger = logging.getLogger(__name__)
         self.client = httpx.AsyncClient(base_url=TG_API_URL)
         self.timeout = POLL_TIMEOUT
@@ -27,7 +30,7 @@ class Bot:
         print("bot initialized")
 
     async def start(self) -> None:
-        print("bot started")
+        await self.delete_webhook()
         while True:
             await check_birthdays(self)
             updates = await self.poll()
@@ -90,8 +93,7 @@ class Bot:
         data = {"inline_query_id": inline_query_id, "results": results}
         await self.client.post(url, json=data)
 
-    async def on_message(self, msg: dict):
-        raise NotImplementedError
-
-    async def on_inline_query(self, inline_query: dict):
-        raise NotImplementedError
+    async def delete_webhook(self):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/deleteWebhook"))
+        res = await self.client.get(url)
+        self.logger.debug("Webhook disabled. %s", res.text)
