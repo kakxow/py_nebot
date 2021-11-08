@@ -1,31 +1,29 @@
-import asyncio
 import logging
-import bottle
 
-from nechatbot.bot import Bot
+import asgi_tools
+
 import settings
 
-if settings.LOGGING_LEVEL == logging.DEBUG:
-    bottle.debug(True)
 
-app = bottle.Bottle()
-app.logger = logging.getLogger(__name__)
+app = asgi_tools.app.App(logger=logging.getLogger(__name__))
 
 
-@app.get("/")
-def greet():
-    asyncio.run(app.bot.send_message("-711229802", "hi!"))
-    return "hi"
+@app.route("/")
+async def greet(request):
+    if app.logger.level == logging.DEBUG:
+        await app.bot.send_message("-711229802", "hi!")
+    return asgi_tools.response.Response("Hi", 200)
 
 
-@app.post(f"/{settings.GITHUB_SECRET}")
-def github_webhook():
-    push = bottle.request.json
+@app.route(f"/{settings.GITHUB_SECRET}", methods=["POST"])
+async def github_webhook(request: asgi_tools.request.Request):
+    push = await request.json()
+    if not isinstance(push, dict):
+        return
     message = push.get("head_commit", {}).get("message", "")
-    sender = push.get("sender", {})
-    login = sender.get("login")
     chat_message = f"Hi! New updates in bot repo: \n{message}"
     app.logger.debug(chat_message)
-    app.logger.debug(f"{settings.GITHUB_UPDATES_CHAT_ID = }")
-    asyncio.run(app.bot.send_message(settings.GITHUB_UPDATES_CHAT_ID, chat_message))
-    return message
+    res = await app.bot.send_message(settings.GITHUB_UPDATES_CHAT_ID, chat_message)
+    if res:
+        return asgi_tools.response.Response("OK", 200)
+    return asgi_tools.response.ResponseError("Message not sent.", 500)
