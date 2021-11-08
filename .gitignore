@@ -1,6 +1,6 @@
 /.idea
 *.sublime*
-
+last_update_id.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
