@@ -38,7 +38,9 @@ class Bot:
             for update in updates:
                 self.logger.debug("%s", update)
                 if update.get("inline_query", {}):
-                    asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
+                    asyncio.ensure_future(
+                        self.on_inline_query(update.get("inline_query", {}))
+                    )
                 else:
                     asyncio.ensure_future(self.on_message(update.get("message", {})))
 
@@ -71,7 +73,9 @@ class Bot:
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/getUpdates"))
         params = {"offset": self.last_update_id, "timeout": self.timeout}
         try:
-            response = await self.client.get(url=url, params=params, timeout=self.timeout)
+            response = await self.client.get(
+                url=url, params=params, timeout=self.timeout
+            )
         except httpx._exceptions.HTTPError:
             updates = []
         else:
