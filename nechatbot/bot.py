@@ -74,7 +74,7 @@ class Bot:
         except httpx._exceptions.HTTPError:
             updates = []
         else:
-            updates = json.loads(response.text)["result"]
+            updates = json.loads(response.text).get("result", [])
         if updates:
             self.logger.debug("%s updates received.", len(updates))
             last_update = max(updates, key=lambda x: x["update_id"])
