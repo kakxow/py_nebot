@@ -1,1 +1,1 @@
-web: uvicorn --workers 1 --port $PORT main:app
+web: uvicorn --workers 1 --port $PORT --host 0.0.0.0 main:app
