@@ -15,6 +15,18 @@ from .constants import TG_API_URL, POLL_TIMEOUT
 filename = "last_update_id.txt"
 
 
+def singleton(class_):
+    instances = {}
+
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+
+    return getinstance
+
+
+@singleton
 class Bot:
     def __init__(self, token: str, on_message, on_inline_query) -> None:
         self.on_message = MethodType(on_message, self)
