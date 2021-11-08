@@ -3,8 +3,9 @@ import logging
 from types import MethodType
 
 from nechatbot.bot import Bot
-from nechatbot.constants import BOT_TOKEN, LOGGING_LEVEL
+from nechatbot.constants import BOT_TOKEN
 from nechatbot.handler import on_message, on_inline_query
+from settings import LOGGING_LEVEL
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=LOGGING_LEVEL
