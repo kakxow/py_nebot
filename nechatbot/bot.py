@@ -76,6 +76,11 @@ class Bot:
             response = await self.client.get(
                 url=url, params=params, timeout=self.timeout
             )
+            response.raise_for_status()
+        except httpx._exceptions.HTTPStatusError as exc:
+            self.logger.debug(f"HTTP Exception for {exc.request.url} - {exc}")
+            self.logger.debug(f"Error response - {response.text}")
+            updates = []
         except httpx._exceptions.HTTPError:
             updates = []
         else:
