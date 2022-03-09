@@ -194,12 +194,11 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
 
 
 async def add_location2(msg: dict) -> Optional[str]:
-    location_command = "/add_location"
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
-    if is_message_startswith(message, location_command):
+    if is_message_startswith(message, constants.location_command):
         user = msg["from"]
-        location = message[len(location_command) :].strip()
+        location = message[len(constants.location_command) :].strip()
         if location in locations.keys():
             change_location(chat_id, user, location)
             return f"Location changed to {location}"

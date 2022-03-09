@@ -139,5 +139,6 @@ no_means_no = "нет"
 social_credit_command = "/show_social_credit_scores"
 add_birthday_command = "/add_birthday"
 list_all_birthdays_command = "/all_birthdays"
+location_command = "/change_location"
 birthday_check_time_tuple = (6, 0, 0)
 report_message_delete_delay = 60
