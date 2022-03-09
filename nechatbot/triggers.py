@@ -204,6 +204,14 @@ async def add_location(msg: dict) -> Optional[str]:
             change_location(chat_id, user, "msk")
         elif is_message_contains_words(message, "petersburg"):
             change_location(chat_id, user, "spb")
+        elif is_message_contains_words(message, "baku"):
+            change_location(chat_id, user, "baku")
+        elif is_message_contains_words(message, "istanbul"):
+            change_location(chat_id, user, "ist")
+        elif is_message_contains_words(message, "tbilisi"):
+            change_location(chat_id, user, "tbl")
+        elif is_message_contains_words(message, "yerevan"):
+            change_location(chat_id, user, "yer")
         elif is_message_contains_words(message, "undefined"):
             change_location(chat_id, user, "undefined")
     return None
