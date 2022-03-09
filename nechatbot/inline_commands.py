@@ -40,7 +40,7 @@ async def choose_city(inline_query):
         text_message_content_baku = {"message_text": "I'm in Baku now!"}
         text_message_content_ist = {"message_text": "I'm in Istanbul now!"}
         text_message_content_tbl = {"message_text": "I'm in Tbilisi now!"}
-        text_message_content_yer = {"message_text": "I'm in Yereven now!"}
+        text_message_content_yer = {"message_text": "I'm in Yerevan now!"}
         text_message_content_remove = {"message_text": "I'm in undefined now!"}
         inline_keyboard_markup = {
             "inline_keyboard": [
