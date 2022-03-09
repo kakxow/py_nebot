@@ -3,18 +3,24 @@ import json
 from . import trello_main
 
 
-def change_location(chat_id: int, user: dict, location: str):
+locations = {
+    "msk": ("@мск", "@msk"),
+    "spb": ("@спб", "@spb"),
+    "baku": ("@баку", "@baku", "@bak", "@бак"),
+    "ist": ("@ist", "@istanbul", "@стамбул"),
+    "tbl": ("@tbl", "@tbilisi", "@тбилиси", "@тбл"),
+    "yer": ("@yer", "@yerevan", "@ереван", "@ере"),
+    "remove": (),
+}
+
+
+def change_location(chat_id: int, user: dict, location: str) -> None:
     location_data = {"location": location}
     card = trello_main.get_card(chat_id, str(user["id"]), "location")
     if card:
         trello_main.update_card(card, location_data, {})
     else:
-        trello_main.create_card(
-            chat_id,
-            user,
-            "location",
-            location_data
-        )
+        trello_main.create_card(chat_id, user, "location", location_data)
 
 
 def get_people_from_location(chat_id: int, location: str) -> list:

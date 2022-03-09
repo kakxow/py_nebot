@@ -1,7 +1,7 @@
 import random
 from typing import Optional
 
-from .location import change_location, get_people_from_location
+from .location import change_location, get_people_from_location, locations
 from . import constants, get_dog, get_frog
 from . import calendar, social_credit
 from .predicates import (
@@ -9,6 +9,7 @@ from .predicates import (
     is_message_contains_words_and_emojis,
     is_message_ends_with_word,
     is_message_contains_phrases,
+    is_message_starts_with_word,
     is_message_startswith,
     is_date,
 )
@@ -32,8 +33,8 @@ __all__ = [
     "add_birthday",
     "list_all_birthdays",
     "add_birthday_inline",
-    "add_location",
-    "ping_location",
+    "add_location2",
+    "ping_location2",
 ]
 auto_delete_list = ["show_social_credit"]
 
@@ -192,7 +193,37 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
     return None
 
 
-async def add_location(msg: dict) -> Optional[str]:
+async def add_location2(msg: dict) -> Optional[str]:
+    location_command = "/add_location"
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    if is_message_starts_with_word(message, location_command):
+        user = msg["from"]
+        location = message[len(location_command) :].strip()
+        if location in locations.keys():
+            change_location(chat_id, user, location)
+            return f"Location changed to {location}"
+        locations_text = ", ".join(locations.keys())
+        return f'Location "{location}" is not in a list, try these or ask Max to add new - {locations_text}'
+    return None
+
+
+async def ping_location2(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    for location, tags in locations.items():
+        if is_message_contains_phrases(message, *tags):
+            id_usernames = get_people_from_location(chat_id, location)
+            return ", ".join(
+                [
+                    f'<a href="tg://user?id={user_id}">{username}</a>'
+                    for user_id, username in id_usernames
+                ]
+            )
+    return None
+
+
+async def _add_location(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
     via_bot = msg.get("via_bot", {})
@@ -217,7 +248,7 @@ async def add_location(msg: dict) -> Optional[str]:
     return None
 
 
-async def ping_location(msg: dict) -> Optional[str]:
+async def _ping_location(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
     if is_message_contains_phrases(message, "@мск", "@msk"):
