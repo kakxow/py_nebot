@@ -198,7 +198,7 @@ async def add_location2(msg: dict) -> Optional[str]:
     chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.location_command):
         user = msg["from"]
-        location = message[len(constants.location_command) :].strip()
+        _, location, *_ = message.split()
         if location in locations.keys():
             change_location(chat_id, user, location)
             return f"Location changed to {location}"
