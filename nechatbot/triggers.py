@@ -2,15 +2,15 @@ import random
 from typing import Optional
 
 from .location import change_location, get_people_from_location
-from . import constants, get_dog, get_frog
-from . import calendar, social_credit
+from . import birthdays, constants, get_dog, get_frog
+from . import social_credit
 from .predicates import (
     is_message_contains_words,
     is_message_contains_words_and_emojis,
     is_message_ends_with_word,
     is_message_contains_phrases,
     is_message_startswith,
-    is_date
+    is_date,
 )
 
 
@@ -33,7 +33,7 @@ __all__ = [
     "list_all_birthdays",
     "add_birthday_inline",
     "add_location",
-    "ping_location"
+    "ping_location",
 ]
 auto_delete_list = ["show_social_credit"]
 
@@ -74,9 +74,7 @@ async def net(msg: dict) -> Optional[str]:
     return None
 
 
-async def base_dog_trigger(
-    url: str, msg: dict, *trigger_words: str
-) -> Optional[str]:
+async def base_dog_trigger(url: str, msg: dict, *trigger_words: str) -> Optional[str]:
     message = msg.get("text", "").lower()
     if is_message_contains_words_and_emojis(message, *trigger_words):
         return await get_dog.get(url)
@@ -97,8 +95,12 @@ async def random_dog(msg: dict) -> Optional[str]:
 
 
 async def corgi(msg: dict) -> Optional[str]:
-    corgi_url = random.choice(("https://dog.ceo/api/breed/corgi/images/random",
-                               "https://dog.ceo/api/breed/pembroke/images/random"))
+    corgi_url = random.choice(
+        (
+            "https://dog.ceo/api/breed/corgi/images/random",
+            "https://dog.ceo/api/breed/pembroke/images/random",
+        )
+    )
     # corgi_url = "https://dog.ceo/api/breed/corgi/images/random"
     return await base_dog_trigger(corgi_url, msg, *constants.corgi)
 
@@ -143,9 +145,13 @@ async def add_social_credit(msg: dict) -> Optional[str]:
         if reply_user == message_user:
             return None
         if sticker_id == constants.positive_credit_sticker_id:
-            social_credit.update_or_add_social_credit(chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit.update_or_add_social_credit(
+                chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT
+            )
         elif sticker_id == constants.negative_credit_sticker_id:
-            social_credit.update_or_add_social_credit(chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT)
+            social_credit.update_or_add_social_credit(
+                chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT
+            )
     return None
 
 
@@ -158,7 +164,7 @@ async def add_birthday(msg: dict) -> Optional[str]:
             _, date, *_ = message.split()
             if is_date(date):
                 user = msg["from"]
-                action = calendar.update_or_add_birthday(chat_id, user, date)
+                action = birthdays.update_or_add_birthday(chat_id, user, date)
                 return f"{action} {user['first_name']}'s card with birthday date {date}"
         return "Please enter valid date - DD.MM"
     return None
@@ -174,7 +180,7 @@ async def add_birthday_inline(msg: dict) -> Optional[str]:
         date = message[-5:]
         if is_date(date):
             user = msg["from"]
-            calendar.update_or_add_birthday(chat_id, user, date)
+            birthdays.update_or_add_birthday(chat_id, user, date)
     return None
 
 
@@ -182,7 +188,7 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
     if is_message_startswith(message, constants.list_all_birthdays_command):
-        return calendar.get_all_birthdays_pretty(chat_id)
+        return birthdays.get_all_birthdays_pretty(chat_id)
     return None
 
 
@@ -213,4 +219,9 @@ async def ping_location(msg: dict) -> Optional[str]:
     else:
         return None
     id_usernames = get_people_from_location(chat_id, loc)
-    return ", ".join([f'<a href="tg://user?id={user_id}">{username}</a>' for user_id, username in id_usernames])
+    return ", ".join(
+        [
+            f'<a href="tg://user?id={user_id}">{username}</a>'
+            for user_id, username in id_usernames
+        ]
+    )

@@ -15,6 +15,11 @@ TRELLO_API_SECRET = os.getenv("TRELLO_API_SECRET")
 TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
 TRELLO_NECHAT_BOARD = os.getenv("TRELLO_NECHAT_BOARD")
 
+JSON_URL = "https://json.extendsclass.com/bin"
+JSON_API_KEY = os.getenv("JSON_API_KEY")
+JSON_SECURITY_KEY = os.getenv("JSON_SECURITY_KEY")
+JSON_ID = os.getenv("JSON_ID")
+
 CREDIT_FIELD_NAME = "credit"
 SOCIAL_CREDIT_INCREMENT = 20
 

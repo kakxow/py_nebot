@@ -2,7 +2,7 @@ from datetime import datetime as dt
 import re
 from typing import Set
 
-from .calendar import day_month_from_date
+from .birthdays import day_month_from_date
 
 
 WORDS_PATTERN = re.compile(r"\w+")
