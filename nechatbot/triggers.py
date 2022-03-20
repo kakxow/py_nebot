@@ -4,6 +4,7 @@ from typing import Optional
 from .location import (
     change_location,
     get_people_from_location,
+    get_locations_with_people,
     locations,
     locations_text,
 )
@@ -223,4 +224,21 @@ async def ping_location2(msg: dict) -> Optional[str]:
                     for user_id, username in id_usernames
                 ]
             )
+    return None
+
+
+async def where_all_location(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    if is_message_startswith(message, constants.where_all_command):
+        locations_with_people = get_locations_with_people(chat_id)
+        reply = ""
+        for location_name, people in locations_with_people.items():
+            name_list = [
+                f"{data['first_name']} {data['last_name']} {data['username']}"
+                for data in people
+            ]
+            list_of_ppl_in_location = ", ".join(name_list)
+            reply = reply + f"{location_name} - {list_of_ppl_in_location}\n"
+        return reply
     return None

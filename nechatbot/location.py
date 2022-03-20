@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections import defaultdict
 from dataclasses import dataclass, field
 import json
 
@@ -61,3 +62,14 @@ def get_people_from_location(chat_id: int, location: str) -> list:
         if card_data["location"] == location:
             user_ids.append((card_data["id"], card_data["username"] or "undefined"))
     return user_ids
+
+
+def get_locations_with_people(chat_id: int) -> dict:
+    """location_name : [{"id": , "first_name": , "last_name": , "username": , "location": }, ...]"""
+    users_in_location = defaultdict(list)
+    for card in trello_main.get_all_cards(chat_id, "location"):
+        card_data = json.loads(card.desc)
+        users_in_location[card_data["location"]].append(card_data)
+    users_in_location.pop("undefined", None)
+    users_in_location.pop("remove", None)
+    return users_in_location
