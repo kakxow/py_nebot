@@ -236,10 +236,9 @@ async def where_all_location(msg: dict) -> Optional[str]:
         reply = ""
         for location_name, people in locations_with_people.items():
             name_list = [
-                f"{data['first_name']} {data['last_name']} {data['username']}"
-                for data in people
+                f"\t{data['first_name']} {data['last_name']}" for data in people
             ]
-            list_of_ppl_in_location = ", ".join(name_list)
-            reply = reply + f"{location_name} - {list_of_ppl_in_location}\n"
+            list_of_ppl_in_location = "\n".join(name_list)
+            reply = reply + f"<b>{location_name}</b>\n{list_of_ppl_in_location}\n\n"
         return reply
     return None

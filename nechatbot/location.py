@@ -18,8 +18,8 @@ class Location:
 
 
 locations = (
-    Location("msk", "Moscow", ("мск", "msk")),
-    Location("spb", "Saint Petersburg", ("спб", "spb")),
+    Location("msk", "Moscow", ("мск", "msk", "moscow", "москва")),
+    Location("spb", "Saint Petersburg", ("спб", "spb", "питер", "петербург")),
     Location(
         "baku",
         "Baku",
@@ -30,6 +30,8 @@ locations = (
     Location("yer", "Yerevan", ("yer", "yerevan", "ереван", "ере")),
     Location("remove", "remove", ("remove",)),
 )
+
+tag_to_name = {loc.name: loc.city_name for loc in locations}
 
 locations_text = "\n".join(
     (f"{loc.city_name} - {', '.join(loc.registration_tags)}" for loc in locations)
@@ -65,11 +67,12 @@ def get_people_from_location(chat_id: int, location: str) -> list:
 
 
 def get_locations_with_people(chat_id: int) -> dict:
-    """location_name : [{"id": , "first_name": , "last_name": , "username": , "location": }, ...]"""
+    """city_name : [{"id": , "first_name": , "last_name": , "username": , "location": }, ...]"""
     users_in_location = defaultdict(list)
     for card in trello_main.get_all_cards(chat_id, "location"):
         card_data = json.loads(card.desc)
-        users_in_location[card_data["location"]].append(card_data)
+        city_name = tag_to_name.get(card_data["location"], "undefined")
+        users_in_location[city_name].append(card_data)
     users_in_location.pop("undefined", None)
     users_in_location.pop("remove", None)
     return users_in_location
