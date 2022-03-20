@@ -1,14 +1,45 @@
+from __future__ import annotations
+from dataclasses import dataclass, field
 import json
 
 from . import trello_main
 
 
-locations = {
+@dataclass
+class Location:
+    name: str
+    city_name: str
+    registration_tags: tuple[str, ...] | tuple[()]
+    mention_tags: tuple[str, ...] | tuple[()] = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.mention_tags = tuple(f"@{el}" for el in self.registration_tags)
+
+
+locations = (
+    Location("msk", "Moscow", ("мск", "msk")),
+    Location("spb", "Saint Petersburg", ("спб", "spb")),
+    Location(
+        "baku",
+        "Baku",
+        ("баку", "baku", "bak", "бак"),
+    ),
+    Location("ist", "Istanbul", ("ist", "istanbul", "стамбул")),
+    Location("tbl", "Tbilisi", ("tbl", "tbilisi", "тбилиси", "тбл", "tbs")),
+    Location("yer", "Yerevan", ("yer", "yerevan", "ереван", "ере")),
+    Location("remove", "remove", ("remove",)),
+)
+
+locations_text = "\n".join(
+    (f"{loc.city_name} - {', '.join(loc.registration_tags)}" for loc in locations)
+)
+
+_locations = {
     "msk": ("@мск", "@msk"),
     "spb": ("@спб", "@spb"),
     "baku": ("@баку", "@baku", "@bak", "@бак"),
     "ist": ("@ist", "@istanbul", "@стамбул"),
-    "tbl": ("@tbl", "@tbilisi", "@тбилиси", "@тбл"),
+    "tbl": ("@tbl", "@tbilisi", "@тбилиси", "@тбл", "@tbs"),
     "yer": ("@yer", "@yerevan", "@ереван", "@ере"),
     "remove": (),
 }

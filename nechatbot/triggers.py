@@ -1,7 +1,12 @@
 import random
 from typing import Optional
 
-from .location import change_location, get_people_from_location, locations
+from .location import (
+    change_location,
+    get_people_from_location,
+    locations,
+    locations_text,
+)
 from . import constants, get_dog, get_frog
 from . import calendar, social_credit
 from .predicates import (
@@ -9,7 +14,6 @@ from .predicates import (
     is_message_contains_words_and_emojis,
     is_message_ends_with_word,
     is_message_contains_phrases,
-    is_message_starts_with_word,
     is_message_startswith,
     is_date,
 )
@@ -199,20 +203,20 @@ async def add_location2(msg: dict) -> Optional[str]:
     if is_message_startswith(message, constants.location_command):
         user = msg["from"]
         _, location, *_ = message.split()
-        if location in locations.keys():
-            change_location(chat_id, user, location)
-            return f"Location changed to {location}"
-        locations_text = ", ".join(locations.keys())
-        return f'Location "{location}" is not in a list, try these or ask Max to add new - {locations_text}'
+        for loc in locations:
+            if location in loc.registration_tags:
+                change_location(chat_id, user, loc.name)
+                return f"Location changed to {loc.city_name}"
+        return f'Location "{location}" is not in a list, try these or ask Max to add new\n{locations_text}'
     return None
 
 
 async def ping_location2(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
-    for location, tags in locations.items():
-        if is_message_contains_phrases(message, *tags):
-            id_usernames = get_people_from_location(chat_id, location)
+    for loc in locations:
+        if is_message_contains_phrases(message, *loc.mention_tags):
+            id_usernames = get_people_from_location(chat_id, loc.name)
             return ", ".join(
                 [
                     f'<a href="tg://user?id={user_id}">{username}</a>'
@@ -220,54 +224,3 @@ async def ping_location2(msg: dict) -> Optional[str]:
                 ]
             )
     return None
-
-
-async def _add_location(msg: dict) -> Optional[str]:
-    message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
-    via_bot = msg.get("via_bot", {})
-    bot_name = via_bot.get("first_name", "")
-
-    if bot_name in constants.MY_BOTS:
-        user = msg["from"]
-        if is_message_contains_words(message, "moscow"):
-            change_location(chat_id, user, "msk")
-        elif is_message_contains_words(message, "petersburg"):
-            change_location(chat_id, user, "spb")
-        elif is_message_contains_words(message, "baku"):
-            change_location(chat_id, user, "baku")
-        elif is_message_contains_words(message, "istanbul"):
-            change_location(chat_id, user, "ist")
-        elif is_message_contains_words(message, "tbilisi"):
-            change_location(chat_id, user, "tbl")
-        elif is_message_contains_words(message, "yerevan"):
-            change_location(chat_id, user, "yer")
-        elif is_message_contains_words(message, "undefined"):
-            change_location(chat_id, user, "undefined")
-    return None
-
-
-async def _ping_location(msg: dict) -> Optional[str]:
-    message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
-    if is_message_contains_phrases(message, "@мск", "@msk"):
-        loc = "msk"
-    elif is_message_contains_phrases(message, "@спб", "@spb"):
-        loc = "spb"
-    elif is_message_contains_phrases(message, "@баку", "@baku", "@bak", "@бак"):
-        loc = "baku"
-    elif is_message_contains_phrases(message, "@ist", "@istanbul", "@стамбул"):
-        loc = "ist"
-    elif is_message_contains_phrases(message, "@tbl", "@tbilisi", "@тбилиси", "@тбл"):
-        loc = "tbl"
-    elif is_message_contains_phrases(message, "@yer", "@yerevan", "@ереван", "@ере"):
-        loc = "yer"
-    else:
-        return None
-    id_usernames = get_people_from_location(chat_id, loc)
-    return ", ".join(
-        [
-            f'<a href="tg://user?id={user_id}">{username}</a>'
-            for user_id, username in id_usernames
-        ]
-    )
