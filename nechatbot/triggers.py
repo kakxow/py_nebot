@@ -40,6 +40,7 @@ __all__ = [
     "add_birthday_inline",
     "add_location2",
     "ping_location2",
+    "where_all_location",
 ]
 auto_delete_list = ["show_social_credit"]
 
