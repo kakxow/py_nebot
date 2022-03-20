@@ -42,7 +42,10 @@ __all__ = [
     "ping_location2",
     "where_all_location",
 ]
-auto_delete_list = ["show_social_credit"]
+auto_delete_list = [
+    "show_social_credit",
+    "where_all_location",
+]
 
 
 async def ukraine(msg: dict) -> Optional[str]:
