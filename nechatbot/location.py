@@ -1,9 +1,9 @@
 from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
-import json
 
-from . import trello_main
+from . import storage
+from .nechat_types import User, Chat
 
 
 @dataclass
@@ -37,42 +37,25 @@ locations_text = "\n".join(
     (f"{loc.city_name} - {', '.join(loc.registration_tags)}" for loc in locations)
 )
 
-_locations = {
-    "msk": ("@мск", "@msk"),
-    "spb": ("@спб", "@spb"),
-    "baku": ("@баку", "@baku", "@bak", "@бак"),
-    "ist": ("@ist", "@istanbul", "@стамбул"),
-    "tbl": ("@tbl", "@tbilisi", "@тбилиси", "@тбл", "@tbs"),
-    "yer": ("@yer", "@yerevan", "@ереван", "@ере"),
-    "remove": (),
-}
+
+def change_location(chat_id: str, user: dict, location: str) -> None:
+    storage.update_user(chat_id, user, location=location)
 
 
-def change_location(chat_id: int, user: dict, location: str) -> None:
-    location_data = {"location": location}
-    card = trello_main.get_card(chat_id, str(user["id"]), "location")
-    if card:
-        trello_main.update_card(card, location_data, {})
-    else:
-        trello_main.create_card(chat_id, user, "location", location_data)
+def get_people_from_location(chat_id: str, location: str) -> list[User]:
+    chats = storage.get_chats()
+    chat = chats.get(chat_id, Chat(chat_id))
+    return [user for user in chat.users.values() if user.location == location]
 
 
-def get_people_from_location(chat_id: int, location: str) -> list:
-    user_ids = []
-    for card in trello_main.get_all_cards(chat_id, "location"):
-        card_data = json.loads(card.desc)
-        if card_data["location"] == location:
-            user_ids.append((card_data["id"], card_data["username"] or "undefined"))
-    return user_ids
-
-
-def get_locations_with_people(chat_id: int) -> dict:
+def get_locations_with_people(chat_id: str) -> dict[str, list[User]]:
     """city_name : [{"id": , "first_name": , "last_name": , "username": , "location": }, ...]"""
+    chats = storage.get_chats()
+    chat = chats.get(chat_id, Chat(chat_id))
     users_in_location = defaultdict(list)
-    for card in trello_main.get_all_cards(chat_id, "location"):
-        card_data = json.loads(card.desc)
-        city_name = tag_to_name.get(card_data["location"], "undefined")
-        users_in_location[city_name].append(card_data)
+    for user in chat.users.values():
+        city_name = tag_to_name.get(user.location, "undefined")
+        users_in_location[city_name].append(user)
     users_in_location.pop("undefined", None)
     users_in_location.pop("remove", None)
     return users_in_location
