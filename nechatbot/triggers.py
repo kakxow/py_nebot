@@ -111,7 +111,6 @@ async def corgi(msg: dict) -> Optional[str]:
             "https://dog.ceo/api/breed/pembroke/images/random",
         )
     )
-    # corgi_url = "https://dog.ceo/api/breed/corgi/images/random"
     return await base_dog_trigger(corgi_url, msg, *constants.corgi)
 
 
@@ -137,7 +136,7 @@ async def terrier(msg: dict) -> Optional[str]:
 
 async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     if is_message_startswith(message, constants.social_credit_command):
         print("Getting all credit scores.")
         return social_credit.get_all_scores_pretty(chat_id)
@@ -147,7 +146,7 @@ async def show_social_credit(msg: dict) -> Optional[str]:
 async def add_social_credit(msg: dict) -> Optional[str]:
     sticker = msg.get("sticker", {})
     reply_message = msg.get("reply_to_message", {})
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     if sticker and reply_message:
         sticker_id = sticker["file_unique_id"]
         reply_user = reply_message["from"]
@@ -167,22 +166,22 @@ async def add_social_credit(msg: dict) -> Optional[str]:
 
 async def add_birthday(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     if is_message_startswith(message, constants.add_birthday_command):
         command_args = message.split()
         if len(command_args) >= 2:
             _, date, *_ = message.split()
             if is_date(date):
                 user = msg["from"]
-                action = calendar.update_or_add_birthday(chat_id, user, date)
-                return f"{action} {user['first_name']}'s card with birthday date {date}"
+                calendar.update_or_add_birthday(chat_id, user, date)
+                return f"Updated {user['first_name']}'s birthday - {date}"
         return "Please enter valid date - DD.MM"
     return None
 
 
 async def add_birthday_inline(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     via_bot = msg.get("via_bot", {})
     bot_name = via_bot.get("first_name", "")
 
@@ -196,7 +195,7 @@ async def add_birthday_inline(msg: dict) -> Optional[str]:
 
 async def list_all_birthdays(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     if is_message_startswith(message, constants.list_all_birthdays_command):
         return calendar.get_all_birthdays_pretty(chat_id)
     return None
@@ -204,7 +203,7 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
 
 async def add_location2(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     if is_message_startswith(message, constants.location_command):
         user = msg["from"]
         _, location, *_ = message.split()
@@ -218,29 +217,25 @@ async def add_location2(msg: dict) -> Optional[str]:
 
 async def ping_location2(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
+    template = '<a href="tg://user?id={}">{}</a>'
     for loc in locations:
         if is_message_contains_phrases(message, *loc.mention_tags):
-            id_usernames = get_people_from_location(chat_id, loc.name)
+            users = get_people_from_location(chat_id, loc.name)
             return ", ".join(
-                [
-                    f'<a href="tg://user?id={user_id}">{username}</a>'
-                    for user_id, username in id_usernames
-                ]
+                [template.format(user.user_id, user.username) for user in users]
             )
     return None
 
 
 async def where_all_location(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
+    chat_id = str(msg["chat"]["id"])
     if is_message_startswith(message, constants.where_all_command):
         locations_with_people = get_locations_with_people(chat_id)
         reply = ""
-        for location_name, people in locations_with_people.items():
-            name_list = [
-                f"\t{data['first_name']} {data['last_name']}" for data in people
-            ]
+        for location_name, users in locations_with_people.items():
+            name_list = [f"\t{user.first_name} {user.last_name}" for user in users]
             list_of_ppl_in_location = "\n".join(name_list)
             reply = reply + f"<b>{location_name}</b>\n{list_of_ppl_in_location}\n\n"
         return reply

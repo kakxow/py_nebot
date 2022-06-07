@@ -2,8 +2,6 @@ from datetime import datetime as dt
 import re
 from typing import Set
 
-from .calendar import day_month_from_date
-
 
 WORDS_PATTERN = re.compile(r"\w+")
 FIRST_WORD_PATTERN = re.compile(r"^\w+")
@@ -75,8 +73,8 @@ def is_message_ends_with_word(message: str, *word_postfixes: str) -> bool:
 
 def is_date(text: str) -> bool:
     try:
-        day, month = day_month_from_date(text)
-        dt(2000, month, day)
+        day, month = text.split(".")
+        dt(2000, int(month), int(day))
     except ValueError:
         return False
     return True

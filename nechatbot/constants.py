@@ -10,12 +10,10 @@ TG_API_URL = "https://api.telegram.org"
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 POLL_TIMEOUT = int(os.getenv("POLL_TIMEOUT", 60))
 
-TRELLO_API_KEY = os.getenv("TRELLO_API_KEY")
-TRELLO_API_SECRET = os.getenv("TRELLO_API_SECRET")
-TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
-TRELLO_NECHAT_BOARD = os.getenv("TRELLO_NECHAT_BOARD")
+JSON_URL = "https://json.extendsclass.com/bin/"
+JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
+JSON_BIN_ID = os.environ["JSON_BIN_ID"]
 
-CREDIT_FIELD_NAME = "credit"
 SOCIAL_CREDIT_INCREMENT = 20
 
 greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
@@ -141,5 +139,4 @@ add_birthday_command = "/add_birthday"
 list_all_birthdays_command = "/all_birthdays"
 location_command = "/change_location"
 where_all_command = "/where_all"
-birthday_check_time_tuple = (6, 0, 0)
 report_message_delete_delay = 60

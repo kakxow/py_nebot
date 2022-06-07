@@ -1,44 +1,34 @@
-import json
-
-from .constants import CREDIT_FIELD_NAME
-from .trello_main import (
-    create_card,
-    get_all_cards,
-    get_card,
-    update_card
-)
+from . import storage
+from .nechat_types import Chat
 
 
-def get_all_scores_pretty(chat_id: int) -> str:
+def get_all_scores_pretty(chat_id: str) -> str:
     """
-    Gets all social credit scores and prettifies the result to be sent by the bot. 
+    Gets all social credit scores and prettifies the result to be sent by the bot.
     """
-    cards = get_all_cards(chat_id, "Credit")
-    card_descriptions = [json.loads(card.desc) for card in cards]
-    card_descriptions.sort(key=lambda c: c[CREDIT_FIELD_NAME], reverse=True)
-    text_scores = [f"•{record['first_name']} {record['username']}: {record[CREDIT_FIELD_NAME]}" for record in card_descriptions]
+    chats = storage.get_chats()
+    chat = chats.get(chat_id, Chat(chat_id))
+    users = list(chat.users.values())
+    users.sort(key=lambda u: u.credit, reverse=True)
+    text_scores = [
+        f"•{user.first_name} {user.username}: {user.credit}"
+        for user in users
+        if user.credit
+    ]
     text = "<b>Nechat Social Credit System scores</b>\n"
     score_table = "\n".join(text_scores) or "Nothing to show yet!"
     return text + score_table
 
 
-def update_or_add_social_credit(chat_id: int, user: dict, credits: int) -> str:
+def update_or_add_social_credit(chat_id: str, user: dict, credits: int) -> int:
     """
-    Updates or creates new user card in credits Trello list with chat_id in name,
-    and returns a keyword for bot's reply.
+    Updates credits score, returns new score.
     """
-    card = get_card(chat_id, str(user["id"]), "Credit")
-    if card:
-        card_desc = json.loads(card.desc)
-        credits = card_desc[CREDIT_FIELD_NAME] + credits
-        update_card(card, {CREDIT_FIELD_NAME: credits}, {})
-        action = "Updated"
-    else:
-        create_card(
-            chat_id,
-            user,
-            "Credit",
-            {CREDIT_FIELD_NAME: credits}
-        )
-        action = "Created"
-    return action
+    chats = storage.get_chats()
+    chat = chats.get(chat_id, Chat(chat_id))
+    credits_old = 0
+    user_id = str(user["id"])
+    if user_id in chat.users:
+        credits_old = chat.users[user_id].credit
+    updated_user = storage.update_user(chat_id, user, credit=(credits_old + credits))
+    return updated_user.credit
