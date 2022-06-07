@@ -104,8 +104,23 @@ async def congrats_today_birthdays(bot) -> None:
         print(f"Getting birthday ppl IDs from trello list for {chat_id}")
         if ids:
             chat_members = [await bot.get_chat_member(chat_id, int(id)) for id in ids]
-            first_names = [f'{chat_member.get("user").get("first_name", "")}' for chat_member in chat_members if chat_member]
-            usernames = [f'@{chat_member.get("user").get("username", "")}' for chat_member in chat_members if chat_member]
+            chat_members_in_chat = [
+                chat_member
+                for chat_member in chat_members
+                if chat_member["status"] != "left"
+            ]
+            if not chat_members_in_chat:
+                continue
+            first_names = [
+                f'{chat_member.get("user").get("first_name", "")}'
+                for chat_member in chat_members_in_chat
+                if chat_member
+            ]
+            usernames = [
+                f'@{chat_member.get("user").get("username", "")}'
+                for chat_member in chat_members_in_chat
+                if chat_member
+            ]
             text_usernames = ", ".join(usernames)
             text_first_names = ", ".join(first_names)
             await bot.send_message(chat_id, f"Happy birthday {text_usernames}!")
