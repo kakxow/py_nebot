@@ -125,7 +125,7 @@ trista = (
     "метни бутылку в альпиниста",
 )
 
-glory_to_ukraine = ("слава украине",)
+glory_to_ukraine = ("слава украине", "слава Україні")
 glory_to_ukraine_response = "ГЕРОЯМ СЛАВА! \U0001F1FA\U0001F1E6"
 
 tractor_driver = "триста"
