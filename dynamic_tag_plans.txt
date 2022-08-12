@@ -1,0 +1,18 @@
+to set a tag:
+	type /tag <tag>
+	list of tags with descriptions appears
+	you select a tag, it applies to you
+to delete a tag:
+	/untag|remove_tag <tag>
+	list of your tags with descriptions appears
+	you select a tag, it deletes from you
+to clear all tags:
+	/clear
+to add new tag:
+	/add_tag <tag> <description>
+to see all tags:
+	/all_tags
+to see my tags:
+	/my_tags
+
+chats cache:
