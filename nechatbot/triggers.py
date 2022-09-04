@@ -204,14 +204,20 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
 async def add_location2(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
+    add_location_error_reply = (
+        f"Try these locations or ask @umarth to add new\n{locations_text}"
+    )
     if is_message_startswith(message, constants.location_command):
+        command_args = message.split()
+        if len(command_args) < 2:
+            return add_location_error_reply
         user = msg["from"]
-        _, location, *_ = message.split()
+        _, location, *_ = command_args
         for loc in locations:
             if location in loc.registration_tags:
                 change_location(chat_id, user, loc.name)
                 return f"Location changed to {loc.city_name}"
-        return f'Location "{location}" is not in a list, try these or ask Max to add new\n{locations_text}'
+        return f'Location "{location}" is not in a list. {add_location_error_reply}'
     return None
 
 
