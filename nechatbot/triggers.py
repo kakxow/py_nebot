@@ -210,7 +210,7 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
 async def add_location2(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
-    add_location_error_reply = (
+    add_location_error_reply = f"Try these locations or ask {constants.maintainer} to add new\n{locations_text}"
     if is_message_startswith(
         message, constants.commands["location_command"]["command"]
     ):
