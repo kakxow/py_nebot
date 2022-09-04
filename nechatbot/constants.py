@@ -161,7 +161,7 @@ commands = {
     },
     "help_command": {
         "command": "/help",
-        "description": "Это сообщение ^^",
+        "description": "Описание бота.",
     },
 }
 
