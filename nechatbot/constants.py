@@ -22,6 +22,8 @@ negative_credit_sticker_id = "AgADAwADf3BGHA"
 
 MY_BOTS = ("mks_nechat_bot", "mks_test_bot")
 
+maintainer = "@umarth"
+
 trash = (
     "пизда",
     "хуй",
@@ -134,9 +136,49 @@ change_title_prefixes = ("ето не чат", "ето нечат")
 
 no_means_no = "нет"
 
-social_credit_command = "/show_social_credit_scores"
-add_birthday_command = "/add_birthday"
-list_all_birthdays_command = "/all_birthdays"
-location_command = "/change_location"
-where_all_command = "/where_all"
 report_message_delete_delay = 60
+
+commands = {
+    "social_credit_command": {
+        "command": "/show_social_credit_scores",
+        "description": f"Вывести рейтинг социального доверия (автоудалится через {report_message_delete_delay} секунд)",
+    },
+    "add_birthday_command": {
+        "command": "/add_birthday",
+        "description": "Добавить своё ДР, чтобы бот потом всем напомнил. Укажи его в формате ДД.ММ через пробел после команды. Например, /add_birthday 03.09",
+    },
+    "list_all_birthdays_command": {
+        "command": "/all_birthdays",
+        "description": f"Вывести все ДР (автоудалится через {report_message_delete_delay} секунд)",
+    },
+    "location_command": {
+        "command": "/change_location",
+        "description": "Добавить свою локацию, потом тебя можно будет тегнуть. Например, /change_location tbl. Для полного списка локаций  - /change_location",
+    },
+    "where_all_command": {
+        "command": "/where_all",
+        "description": f"Вывести кто где (автоудалится через {report_message_delete_delay} секунд)",
+    },
+    "help_command": {
+        "command": "/help",
+        "description": "Описание бота.",
+    },
+}
+
+commands_for_help = "\n".join(
+    [
+        f"{element['command']} - {element['description']}"
+        for element in commands.values()
+    ]
+)
+
+help_message = f"""
+Привет! Это бот для нечата.
+Передразнивает, приветствует новых участников, поздравляет с ДР*, постит лягух и собакенов
+Для изменения названия чята, напиши сообщение, начинающееся с "ето не чат" или "ето нечат"
+* добавь своё ДР командой
+
+{commands_for_help}
+
+Вопросы по работе бота - {maintainer}
+"""

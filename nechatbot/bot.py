@@ -6,7 +6,7 @@ from urllib.parse import urljoin, quote
 import aiofiles  # type: ignore
 import httpx  # type: ignore
 
-from .constants import TG_API_URL, POLL_TIMEOUT
+from .constants import TG_API_URL, POLL_TIMEOUT, commands
 
 
 filename = "last_update_id.txt"
@@ -26,6 +26,8 @@ class Bot:
         print("bot initialized")
 
     async def start(self) -> None:
+        await self.set_my_commands()
+        print("commands set")
         print("bot started")
         while True:
             updates = await self.poll()
@@ -90,6 +92,11 @@ class Bot:
     async def answer_inline_query(self, inline_query_id: str, results: list):
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/answerInlineQuery"))
         data = {"inline_query_id": inline_query_id, "results": results}
+        await self.client.post(url, json=data)
+
+    async def set_my_commands(self):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/setMyCommands"))
+        data = {"commands": list(commands.values())}
         await self.client.post(url, json=data)
 
     async def on_message(self, msg: dict):
