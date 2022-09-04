@@ -140,3 +140,31 @@ list_all_birthdays_command = "/all_birthdays"
 location_command = "/change_location"
 where_all_command = "/where_all"
 report_message_delete_delay = 60
+
+commands = {
+    "social_credit_command": {
+        "command": "/show_social_credit_scores",
+        "description": f"Вывести рейтинг социального доверия (автоудалится через {report_message_delete_delay} секунд)",
+    },
+    "add_birthday_command": {
+        "command": "/add_birthday",
+        "description": "Добавить своё ДР, чтобы бот потом всем напомнил. Укажи его в формате ДД.ММ через пробел после команды. Например, /add_birthday 03.09",
+    },
+    "list_all_birthdays_command": {
+        "command": "/all_birthdays",
+        "description": f"Вывести все ДР (автоудалится через {report_message_delete_delay} секунд)",
+    },
+    "location_command": {
+        "command": "/change_location",
+        "description": "Добавить свою локацию, потом тебя можно будет тегнуть. Например, /change_location tbl. Для полного списка локаций  - /change_location",
+    },
+    "where_all_command": {
+        "command": "/where_all",
+        "description": f"Вывести кто где (автоудалится через {report_message_delete_delay} секунд)",
+    },
+    "help_command": {
+        "command": "/help",
+        "description": "Это сообщение ^^",
+    },
+}
+

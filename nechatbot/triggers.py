@@ -137,7 +137,9 @@ async def terrier(msg: dict) -> Optional[str]:
 async def show_social_credit(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
-    if is_message_startswith(message, constants.social_credit_command):
+    if is_message_startswith(
+        message, constants.commands["social_credit_command"]["command"]
+    ):
         print("Getting all credit scores.")
         return social_credit.get_all_scores_pretty(chat_id)
     return None
@@ -167,7 +169,9 @@ async def add_social_credit(msg: dict) -> Optional[str]:
 async def add_birthday(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
-    if is_message_startswith(message, constants.add_birthday_command):
+    if is_message_startswith(
+        message, constants.commands["add_birthday_command"]["command"]
+    ):
         command_args = message.split()
         if len(command_args) >= 2:
             _, date, *_ = message.split()
@@ -196,7 +200,9 @@ async def add_birthday_inline(msg: dict) -> Optional[str]:
 async def list_all_birthdays(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
-    if is_message_startswith(message, constants.list_all_birthdays_command):
+    if is_message_startswith(
+        message, constants.commands["list_all_birthdays_command"]["command"]
+    ):
         return calendar.get_all_birthdays_pretty(chat_id)
     return None
 
@@ -205,9 +211,9 @@ async def add_location2(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
     add_location_error_reply = (
-        f"Try these locations or ask @umarth to add new\n{locations_text}"
-    )
-    if is_message_startswith(message, constants.location_command):
+    if is_message_startswith(
+        message, constants.commands["location_command"]["command"]
+    ):
         command_args = message.split()
         if len(command_args) < 2:
             return add_location_error_reply
@@ -237,7 +243,9 @@ async def ping_location2(msg: dict) -> Optional[str]:
 async def where_all_location(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
-    if is_message_startswith(message, constants.where_all_command):
+    if is_message_startswith(
+        message, constants.commands["where_all_command"]["command"]
+    ):
         locations_with_people = get_locations_with_people(chat_id)
         reply = ""
         for location_name, users in locations_with_people.items():
