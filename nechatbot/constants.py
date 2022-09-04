@@ -136,11 +136,6 @@ change_title_prefixes = ("ето не чат", "ето нечат")
 
 no_means_no = "нет"
 
-social_credit_command = "/show_social_credit_scores"
-add_birthday_command = "/add_birthday"
-list_all_birthdays_command = "/all_birthdays"
-location_command = "/change_location"
-where_all_command = "/where_all"
 report_message_delete_delay = 60
 
 commands = {
@@ -170,3 +165,20 @@ commands = {
     },
 }
 
+commands_for_help = "\n".join(
+    [
+        f"{element['command']} - {element['description']}"
+        for element in commands.values()
+    ]
+)
+
+help_message = f"""
+Привет! Это бот для нечата.
+Передразнивает, приветствует новых участников, поздравляет с ДР*, постит лягух и собакенов
+Для изменения названия чята, напиши сообщение, начинающееся с "ето не чат" или "ето нечат"
+* добавь своё ДР командой
+
+{commands_for_help}
+
+Вопросы по работе бота - {maintainer}
+"""

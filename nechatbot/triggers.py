@@ -41,10 +41,12 @@ __all__ = [
     "add_location2",
     "ping_location2",
     "where_all_location",
+    "help",
 ]
 auto_delete_list = [
     "show_social_credit",
     "where_all_location",
+    "help",
 ]
 
 
@@ -253,4 +255,11 @@ async def where_all_location(msg: dict) -> Optional[str]:
             list_of_ppl_in_location = "\n".join(name_list)
             reply = reply + f"<b>{location_name}</b>\n{list_of_ppl_in_location}\n\n"
         return reply
+    return None
+
+
+async def help(msg: dict) -> Optional[str]:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["help_command"]["command"]):
+        return constants.help_message
     return None
