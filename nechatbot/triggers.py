@@ -46,7 +46,7 @@ __all__ = [
 ]
 auto_delete_list = [
     "show_social_credit",
-    "where_all_location",
+    # "where_all_location",
     # "help",
 ]
 
