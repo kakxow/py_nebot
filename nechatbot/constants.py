@@ -9,9 +9,10 @@ LOGGING_LEVEL = int(os.getenv("LOGGING_LEVEL", logging.INFO))
 TG_API_URL = "https://api.telegram.org"
 BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 POLL_TIMEOUT = int(os.getenv("POLL_TIMEOUT", 60))
+WEBHOOK_URL = os.getenv("WEBHOOK_URL", "")
 
 JSON_URL = "https://json.extendsclass.com/bin/"
-JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
+SECURITY_KEY = JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
 JSON_BIN_ID = os.environ["JSON_BIN_ID"]
 
 SOCIAL_CREDIT_INCREMENT = 20

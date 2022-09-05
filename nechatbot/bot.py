@@ -6,7 +6,7 @@ from urllib.parse import urljoin, quote
 import aiofiles  # type: ignore
 import httpx  # type: ignore
 
-from .constants import TG_API_URL, POLL_TIMEOUT, commands
+from .constants import TG_API_URL, POLL_TIMEOUT, commands, WEBHOOK_URL, SECURITY_KEY
 
 
 filename = "last_update_id.txt"
@@ -24,21 +24,29 @@ class Bot:
         except FileNotFoundError:
             self.last_update_id = 0
         print("bot initialized")
+        asyncio.run(self.set_my_commands())
+        print("commands set")
+        asyncio.run(self.set_webhook())
+        print("webhook set")
 
     async def start(self) -> None:
-        await self.set_my_commands()
-        print("commands set")
         print("bot started")
         while True:
             updates = await self.poll()
             for update in updates:
-                self.logger.debug("%s", update)
-                if update.get("inline_query", {}):
-                    asyncio.ensure_future(
-                        self.on_inline_query(update.get("inline_query", {}))
-                    )
-                else:
-                    asyncio.ensure_future(self.on_message(update.get("message", {})))
+                self.process_update(update)
+
+    async def process_update(self, update):
+        self.logger.debug("%s", update)
+        if update.get("inline_query", {}):
+            asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
+        else:
+            asyncio.ensure_future(self.on_message(update.get("message", {})))
+
+    async def set_webhook(self, webhook_url: str = WEBHOOK_URL):
+        data = {"url": webhook_url, "secret_token": SECURITY_KEY}
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/setWebhook"))
+        await self.client.post(url, json=data)
 
     async def send_sticker(self, chat_id: str, sticker_id: str, **kwargs) -> None:
         data = {"sticker": sticker_id, "chat_id": chat_id, **kwargs}
