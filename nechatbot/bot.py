@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 import logging
 from urllib.parse import urljoin, quote
 
@@ -24,12 +25,10 @@ class Bot:
         except FileNotFoundError:
             self.last_update_id = 0
         self.logger.info("bot initialized")
-        asyncio.ensure_future(self.set_my_commands())
-        self.logger.info("commands set")
-        asyncio.ensure_future(self.delete_webhook())
-        self.logger.info("webhook cleared")
-        asyncio.ensure_future(self.set_webhook())
-        self.logger.info("webhook set")
+
+        asyncio.get_event_loop().run_until_complete(self.set_my_commands())
+        asyncio.get_event_loop().run_until_complete(self.delete_webhook())
+        asyncio.get_event_loop().run_until_complete(self.set_webhook())
 
     async def start(self) -> None:
         self.logger.info("bot started")
