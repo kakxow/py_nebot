@@ -140,10 +140,10 @@ no_means_no = "нет"
 report_message_delete_delay = 60
 
 commands = {
-    "social_credit_command": {
-        "command": "/show_social_credit_scores",
-        "description": f"Вывести рейтинг социального доверия (автоудалится через {report_message_delete_delay} секунд)",
-    },
+    # "social_credit_command": {
+    #     "command": "/show_social_credit_scores",
+    #     "description": f"Вывести рейтинг социального доверия (автоудалится через {report_message_delete_delay} секунд)",
+    # },
     "add_birthday_command": {
         "command": "/add_birthday",
         "description": "Добавить своё ДР, чтобы бот потом всем напомнил. Укажи его в формате ДД.ММ через пробел после команды. Например, /add_birthday 03.09. Либо ответьте боту с корректной датой :)",
