@@ -24,9 +24,14 @@ async def on_message(bot, msg: dict) -> None:
 
         for trigger_name in triggers.__all__:
             callable_trigger = getattr(triggers, trigger_name)
-            message = await callable_trigger(msg)
-            if message:
-                sent_message = await bot.send_message(chat_id, message)
+            reply = await callable_trigger(msg)
+            if reply:
+                if isinstance(reply, tuple):
+                    message, kwargs = reply
+                    sent_message = await bot.send_message(chat_id, message, **kwargs)
+                else:
+                    message = reply
+                    sent_message = await bot.send_message(chat_id, message)
                 if trigger_name in triggers.auto_delete_list:
                     await asyncio.sleep(report_message_delete_delay)
                     await bot.delete_message(chat_id, sent_message["message_id"])

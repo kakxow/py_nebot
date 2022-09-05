@@ -24,6 +24,7 @@ MY_BOTS = ("mks_nechat_bot", "mks_test_bot")
 
 maintainer = "@umarth"
 
+birthday_error_reply = "Please reply with valid date - DD.MM"
 trash = (
     "пизда",
     "хуй",
