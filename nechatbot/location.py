@@ -28,6 +28,13 @@ locations = (
     Location("ist", "Istanbul", ("ist", "istanbul", "стамбул")),
     Location("tbl", "Tbilisi", ("tbl", "tbilisi", "тбилиси", "тбл", "tbs", "tbi")),
     Location("yer", "Yerevan", ("yer", "yerevan", "ереван", "ере")),
+    Location("ala", "Almaty", ("ala", "almt", "almaty", "алматы", "ата")),
+    Location(
+        "ovb",
+        "Novosibirsk",
+        ("ovb", "sib", "nsb", "novosibirsk", "новосибирск", "сиб", "новосиб"),
+    ),
+    Location("tmb", "Tambov", ("tmb", "tambov", "тамбов", "тмб")),
     Location("remove", "remove", ("remove",)),
 )
 
