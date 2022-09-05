@@ -24,9 +24,9 @@ class Bot:
         except FileNotFoundError:
             self.last_update_id = 0
         print("bot initialized")
-        asyncio.run(self.set_my_commands())
+        asyncio.ensure_future(self.set_my_commands())
         print("commands set")
-        asyncio.run(self.set_webhook())
+        asyncio.ensure_future(self.set_webhook())
         print("webhook set")
 
     async def start(self) -> None:
