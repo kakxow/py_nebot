@@ -23,14 +23,14 @@ class Bot:
                 self.last_update_id = int(f.read())
         except FileNotFoundError:
             self.last_update_id = 0
-        print("bot initialized")
+        self.logger.info("bot initialized")
         asyncio.ensure_future(self.set_my_commands())
-        print("commands set")
+        self.logger.info("commands set")
         asyncio.ensure_future(self.set_webhook())
-        print("webhook set")
+        self.logger.info("webhook set")
 
     async def start(self) -> None:
-        print("bot started")
+        self.logger.info("bot started")
         while True:
             updates = await self.poll()
             for update in updates:
@@ -54,7 +54,7 @@ class Bot:
         await self.client.post(url, json=data)
 
     async def send_message(self, chat_id, text, **kwargs) -> None:
-        print("Message to send - ", text)
+        self.logger.debug("Message to send - ", text)
         data = {"text": text, "chat_id": chat_id, "parse_mode": "HTML", **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendMessage"))
         response = await self.client.post(url, json=data)
