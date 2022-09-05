@@ -31,7 +31,7 @@ async def on_message(bot, msg: dict) -> None:
                     sent_message = await bot.send_message(chat_id, message, **kwargs)
                 else:
                     message = reply
-                sent_message = await bot.send_message(chat_id, message)
+                    sent_message = await bot.send_message(chat_id, message)
                 if trigger_name in triggers.auto_delete_list:
                     await asyncio.sleep(report_message_delete_delay)
                     await bot.delete_message(chat_id, sent_message["message_id"])
