@@ -26,6 +26,8 @@ class Bot:
         self.logger.info("bot initialized")
         asyncio.ensure_future(self.set_my_commands())
         self.logger.info("commands set")
+        asyncio.ensure_future(self.delete_webhook())
+        self.logger.info("webhook cleared")
         asyncio.ensure_future(self.set_webhook())
         self.logger.info("webhook set")
 
@@ -48,13 +50,17 @@ class Bot:
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/setWebhook"))
         await self.client.post(url, json=data)
 
+    async def delete_webhook(self):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/deleteWebhook"))
+        await self.client.post(url)
+
     async def send_sticker(self, chat_id: str, sticker_id: str, **kwargs) -> None:
         data = {"sticker": sticker_id, "chat_id": chat_id, **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendSticker"))
         await self.client.post(url, json=data)
 
     async def send_message(self, chat_id, text, **kwargs) -> None:
-        self.logger.debug("Message to send - ", text)
+        self.logger.debug("Message to send - %s", text)
         data = {"text": text, "chat_id": chat_id, "parse_mode": "HTML", **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendMessage"))
         response = await self.client.post(url, json=data)
