@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from types import MethodType
 
@@ -12,6 +11,3 @@ logging.basicConfig(
 bot = Bot(BOT_TOKEN)
 bot.on_message = MethodType(on_message, bot)  # type: ignore
 bot.on_inline_query = MethodType(on_inline_query, bot)  # type: ignore
-
-
-asyncio.run(bot.start())
