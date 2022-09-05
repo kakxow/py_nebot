@@ -42,6 +42,7 @@ __all__ = [
     "ping_location2",
     "where_all_location",
     "help",
+    "add_birthday_from_reply",
 ]
 auto_delete_list = [
     "show_social_credit",
@@ -168,7 +169,7 @@ async def add_social_credit(msg: dict) -> Optional[str]:
     return None
 
 
-async def add_birthday(msg: dict) -> Optional[str]:
+async def add_birthday(msg: dict) -> Optional[str | tuple[str, dict]]:
     message = msg.get("text", "").lower()
     chat_id = str(msg["chat"]["id"])
     if is_message_startswith(
@@ -181,7 +182,33 @@ async def add_birthday(msg: dict) -> Optional[str]:
                 user = msg["from"]
                 calendar.update_or_add_birthday(chat_id, user, date)
                 return f"Updated {user['first_name']}'s birthday - {date}"
-        return "Please enter valid date - DD.MM"
+        force_reply = {"force_reply": True, "selective": True}
+        error_reply_args = {
+            "reply_to_message_id": msg["message_id"],
+            "reply_markup": force_reply,
+        }
+        return constants.birthday_error_reply, error_reply_args
+    return None
+
+
+async def add_birthday_from_reply(msg: dict) -> Optional[str | tuple[str, dict]]:
+    message = msg.get("text", "").lower()
+    chat_id = str(msg["chat"]["id"])
+    reply = msg.get("reply_to_message", {})
+    is_reply_from_bot = reply.get("from", {}).get("is_bot", "")
+    is_reply_text_birthday = reply.get("text", "") == constants.birthday_error_reply
+    if reply and is_reply_from_bot and is_reply_text_birthday:
+        if is_date(message):
+            user = msg["from"]
+            calendar.update_or_add_birthday(chat_id, user, message)
+            return f"Updated {user['first_name']}'s birthday - {message}"
+        else:
+            force_reply = {"force_reply": True, "selective": True}
+            error_reply_args = {
+                "reply_to_message_id": msg["message_id"],
+                "reply_markup": force_reply,
+            }
+            return constants.birthday_error_reply, error_reply_args
     return None
 
 
