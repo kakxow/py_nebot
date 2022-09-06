@@ -1,6 +1,5 @@
 from datetime import datetime as dt
 import re
-from typing import Set
 
 
 WORDS_PATTERN = re.compile(r"\w+")
@@ -23,7 +22,7 @@ WORDS_AND_EMOJIS_PATTERN = re.compile(
 )  # https://gist.github.com/Alex-Just/e86110836f3f93fe7932290526529cd1#gistcomment-3236190
 
 
-def extract_words_and_emojis(message: str) -> Set[str]:
+def extract_words_and_emojis(message: str) -> set[str]:
     words_and_emojis = WORDS_AND_EMOJIS_PATTERN.findall(message.lower())
     return set(words_and_emojis)
 
@@ -33,7 +32,7 @@ def is_message_contains_words_and_emojis(message: str, *words_to_find: str) -> b
     return any(word.lower() in message_words for word in words_to_find)
 
 
-def extract_words(message: str) -> Set[str]:
+def extract_words(message: str) -> set[str]:
     words = WORDS_PATTERN.findall(message.lower())
     return set(words)
 

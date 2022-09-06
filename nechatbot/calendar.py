@@ -1,4 +1,3 @@
-from __future__ import annotations
 from datetime import datetime as dt
 
 from .nechat_types import Chat
