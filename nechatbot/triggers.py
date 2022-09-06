@@ -45,8 +45,6 @@ __all__ = [
     "add_birthday_from_reply",
     "chat_title",
     "new_chat_member",
-    "debt_pin",
-    "debt_add_button",
 ]
 auto_delete_list = [
     "show_social_credit",
@@ -296,34 +294,6 @@ async def help(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     if is_message_startswith(message, constants.commands["help_command"]["command"]):
         return constants.help_message
-    return None
-
-
-async def debt_pin(msg: dict) -> Optional[tuple[str, dict]]:
-    message = msg.get("text", "").lower()
-    if is_message_contains_words(message, *constants.debt_keywords):
-        chat_id = str(msg["chat"]["id"])
-        message_id = str(msg["message_id"])
-        return "pin_chat_message", {"chat_id": chat_id, "message_id": message_id}
-    return None
-
-
-async def debt_add_button(msg: dict) -> Optional[tuple[str, dict]]:
-    message = msg.get("text", "")
-    if is_message_contains_words(message.lower(), "содомита ответ"):
-        chat_id = str(msg["chat"]["id"])
-        message_id = str(msg["message_id"])
-        button = {
-            "text": "пять минут турецкий",
-            "callback_data": "123",
-        }
-        keyboard = {"inline_keyboard": [[button]]}
-        return "edit_message_text", {
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "text": message,
-            "reply_markup": keyboard,
-        }
     return None
 
 
