@@ -16,3 +16,8 @@ async def get_update(request: Request) -> tuple[int, str] | ResponseError:
     update = await request.json()
     asyncio.ensure_future(bot.dispatch_update(update))
     return 200, "OK"
+
+
+@app.route("/health_check", methods=["GET"])
+async def health_check(_request: Request) -> tuple[int, str]:
+    return 200, "OK"
