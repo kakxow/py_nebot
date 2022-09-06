@@ -7,7 +7,7 @@ from . import triggers, inline_commands
 from .constants import report_message_delete_delay
 
 
-async def on_message(bot: Bot, msg: dict) -> None:
+async def on_message(bot: "Bot", msg: dict) -> None:
     chat_id = msg["chat"]["id"]
 
     for trigger_name in triggers.__all__:
@@ -24,7 +24,7 @@ async def on_message(bot: Bot, msg: dict) -> None:
             await bot.delete_message(chat_id, sent_message["message_id"])
 
 
-async def on_inline_query(bot: Bot, inline_query: dict) -> None:
+async def on_inline_query(bot: "Bot", inline_query: dict) -> None:
     for trigger_name in inline_commands.__all__:
         inline_command = getattr(inline_commands, trigger_name)
         inline_query_results = await inline_command(inline_query)
