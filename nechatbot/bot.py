@@ -112,6 +112,28 @@ class Bot:
         data = {"commands": list(commands.values())}
         await self.client.post(url, json=data)
 
+    async def pin_chat_message(self, chat_id: str, message_id: int):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/pinChatMessage"))
+        data = {"chat_id": chat_id, "message_id": message_id}
+        await self.client.post(url, json=data)
+
+    async def unpin_chat_message(self, chat_id: str, message_id: int):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/unpinChatMessage"))
+        data = {"chat_id": chat_id, "message_id": message_id}
+        await self.client.post(url, json=data)
+
+    async def edit_message_text(
+        self, chat_id: str, message_id: int, text: str, reply_markup
+    ):
+        url = urljoin(TG_API_URL, quote(f"bot{self.token}/editMessageText"))
+        data = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "text": text,
+            "reply_markup": reply_markup,
+        }
+        await self.client.post(url, json=data)
+
     async def on_message(self, msg: dict):
         raise NotImplementedError
 
