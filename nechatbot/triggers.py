@@ -43,6 +43,10 @@ __all__ = [
     "where_all_location",
     "help",
     "add_birthday_from_reply",
+    "chat_title",
+    "new_chat_member",
+    "debt_pin",
+    "debt_add_button",
 ]
 auto_delete_list = [
     "show_social_credit",
@@ -184,10 +188,12 @@ async def add_birthday(msg: dict) -> Optional[str | tuple[str, dict]]:
                 return f"Updated {user['first_name']}'s birthday - {date}"
         force_reply = {"force_reply": True, "selective": True}
         error_reply_args = {
+            "text": constants.birthday_error_reply,
+            "chat_id": chat_id,
             "reply_to_message_id": msg["message_id"],
             "reply_markup": force_reply,
         }
-        return constants.birthday_error_reply, error_reply_args
+        return "send_message", error_reply_args
     return None
 
 
@@ -205,10 +211,11 @@ async def add_birthday_from_reply(msg: dict) -> Optional[str | tuple[str, dict]]
         else:
             force_reply = {"force_reply": True, "selective": True}
             error_reply_args = {
+                "text": constants.birthday_error_reply,
                 "reply_to_message_id": msg["message_id"],
                 "reply_markup": force_reply,
             }
-            return constants.birthday_error_reply, error_reply_args
+            return "send_message", error_reply_args
     return None
 
 
@@ -289,4 +296,53 @@ async def help(msg: dict) -> Optional[str]:
     message = msg.get("text", "").lower()
     if is_message_startswith(message, constants.commands["help_command"]["command"]):
         return constants.help_message
+    return None
+
+
+async def debt_pin(msg: dict) -> Optional[tuple[str, dict]]:
+    message = msg.get("text", "").lower()
+    if is_message_contains_words(message, *constants.debt_keywords):
+        chat_id = str(msg["chat"]["id"])
+        message_id = str(msg["message_id"])
+        return "pin_chat_message", {"chat_id": chat_id, "message_id": message_id}
+    return None
+
+
+async def debt_add_button(msg: dict) -> Optional[tuple[str, dict]]:
+    message = msg.get("text", "")
+    if is_message_contains_words(message.lower(), "содомита ответ"):
+        chat_id = str(msg["chat"]["id"])
+        message_id = str(msg["message_id"])
+        button = {
+            "text": "пять минут турецкий",
+            "callback_data": "123",
+        }
+        keyboard = {"inline_keyboard": [[button]]}
+        return "edit_message_text", {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "text": message,
+            "reply_markup": keyboard,
+        }
+    return None
+
+
+async def chat_title(msg: dict) -> Optional[tuple[str, dict]]:
+    message = msg.get("text", "")
+    chat_id = str(msg["chat"]["id"])
+    if is_message_startswith(message, *constants.change_title_prefixes):
+        return "set_chat_title", {"chat_id": chat_id, "text": message}
+    return None
+
+
+async def new_chat_member(msg: dict) -> Optional[tuple[str, dict]]:
+    new_chat_member = msg.get("new_chat_member", "")
+    if new_chat_member:
+        message_id = msg["message_id"]
+        chat_id = str(msg["chat"]["id"])
+        return "send_sticker", {
+            "chat_id": chat_id,
+            "sticker_id": constants.greeting_sticker,
+            "reply_to_message_id": message_id,
+        }
     return None
