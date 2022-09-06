@@ -1,6 +1,5 @@
 import asyncio
 import json
-import time
 import logging
 from urllib.parse import urljoin, quote
 
@@ -35,9 +34,9 @@ class Bot:
         while True:
             updates = await self.poll()
             for update in updates:
-                self.process_update(update)
+                self.dispatch_update(update)
 
-    async def process_update(self, update):
+    async def dispatch_update(self, update):
         self.logger.debug("%s", update)
         if update.get("inline_query", {}):
             asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
@@ -58,7 +57,7 @@ class Bot:
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendSticker"))
         await self.client.post(url, json=data)
 
-    async def send_message(self, chat_id, text, **kwargs) -> None:
+    async def send_message(self, chat_id, text, **kwargs) -> dict:
         self.logger.debug("Message to send - %s", text)
         data = {"text": text, "chat_id": chat_id, "parse_mode": "HTML", **kwargs}
         url = urljoin(TG_API_URL, quote(f"bot{self.token}/sendMessage"))

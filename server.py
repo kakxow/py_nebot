@@ -14,5 +14,5 @@ async def get_update(request):
     if request.headers.get("X-Telegram-Bot-Api-Secret-Token", "") != SECURITY_KEY:
         return ResponseError(status_code=401)
     update = await request.json()
-    asyncio.ensure_future(bot.process_update(update))
+    asyncio.ensure_future(bot.dispatch_update(update))
     return 200, "OK"
