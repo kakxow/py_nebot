@@ -195,10 +195,12 @@ async def add_birthday(msg: dict) -> str | tuple[str, dict] | None:
 
 
 async def add_birthday_from_reply(msg: dict) -> str | tuple[str, dict] | None:
+    reply = msg.get("reply_to_message", {})
+    if not reply:
+        return None
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
-    reply = msg.get("reply_to_message", {})
-    is_reply_from_bot = reply["from"].get["is_bot"]
+    is_reply_from_bot = reply["from"]["is_bot"]
     is_reply_text_birthday = reply.get("text", "") == constants.birthday_error_reply
     if reply and is_reply_from_bot and is_reply_text_birthday:
         if is_date(message):
