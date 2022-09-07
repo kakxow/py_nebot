@@ -11,3 +11,9 @@ logging.basicConfig(
 bot = Bot()
 bot.on_message = MethodType(on_message, bot)  # type: ignore
 bot.on_inline_query = MethodType(on_inline_query, bot)  # type: ignore
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.get_event_loop().run_until_complete(bot.start())

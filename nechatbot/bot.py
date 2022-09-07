@@ -18,17 +18,18 @@ class Bot:
         self.logger.info("bot initialized")
 
         asyncio.get_event_loop().run_until_complete(self.set_my_commands())
-        asyncio.get_event_loop().run_until_complete(self.delete_webhook())
         asyncio.get_event_loop().run_until_complete(self.set_webhook())
 
     async def start(self) -> None:
+        """use for longpolling method"""
+        await self.delete_webhook()
         self.logger.info("bot started")
         while True:
             updates = await self.poll()
             for update in updates:
-                self.dispatch_update(update)
+                await self.dispatch_update(update)
 
-    async def dispatch_update(self, update):
+    async def dispatch_update(self, update: dict) -> None:
         self.logger.debug("%s", update)
         if update.get("inline_query", {}):
             asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
