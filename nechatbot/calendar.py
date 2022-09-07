@@ -12,7 +12,7 @@ def dm_to_md(date: str) -> str:
     return ".".join([month, day])
 
 
-def get_all_birthdays_pretty(chat_id: str) -> str:
+def get_all_birthdays_pretty(chat_id: int) -> str:
     """
     Gets all birthdays and prettifies the result to be sent by the bot.
     """
@@ -28,11 +28,11 @@ def get_all_birthdays_pretty(chat_id: str) -> str:
     return text + birthday_table
 
 
-def update_or_add_birthday(chat_id: str, user: dict, date: str) -> None:
+def update_or_add_birthday(chat_id: int, user: dict, date: str) -> None:
     storage.update_user(chat_id, user, birthday=date)
 
 
-def get_today_birthdays(chat_id: str, date: str = "") -> list[str]:
+def get_today_birthdays(chat_id: int, date: str = "") -> list[int]:
     """
     Returns a list of user_ids who have a birthday today.
     """

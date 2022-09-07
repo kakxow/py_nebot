@@ -44,17 +44,17 @@ locations_text = "\n".join(
 )
 
 
-def change_location(chat_id: str, user: dict, location: str) -> None:
+def change_location(chat_id: int, user: dict, location: str) -> None:
     storage.update_user(chat_id, user, location=location)
 
 
-def get_people_from_location(chat_id: str, location: str) -> list[User]:
+def get_people_from_location(chat_id: int, location: str) -> list[User]:
     chats = storage.get_chats()
     chat = chats.get(chat_id, Chat(chat_id))
     return [user for user in chat.users.values() if user.location == location]
 
 
-def get_locations_with_people(chat_id: str) -> dict[str, list[User]]:
+def get_locations_with_people(chat_id: int) -> dict[str, list[User]]:
     """city_name : [{"id": , "first_name": , "last_name": , "username": , "location": }, ...]"""
     chats = storage.get_chats()
     chat = chats.get(chat_id, Chat(chat_id))

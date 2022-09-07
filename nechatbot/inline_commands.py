@@ -5,7 +5,7 @@ __all__ = [
 ]
 
 
-async def add_birthday(inline_query) -> list:
+async def add_birthday(inline_query: dict) -> list:
     if inline_query["chat_type"] in ("group", "supergroup"):
         date = inline_query["query"]
         if is_date(date):
