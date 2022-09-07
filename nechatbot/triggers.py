@@ -1,5 +1,4 @@
 import random
-from typing import Optional
 
 from .location import (
     change_location,
@@ -43,6 +42,8 @@ __all__ = [
     "where_all_location",
     "help",
     "add_birthday_from_reply",
+    "chat_title",
+    "new_chat_member",
 ]
 auto_delete_list = [
     "show_social_credit",
@@ -51,21 +52,21 @@ auto_delete_list = [
 ]
 
 
-async def ukraine(msg: dict) -> Optional[str]:
+async def ukraine(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     if is_message_contains_phrases(message, *constants.glory_to_ukraine):
         return constants.glory_to_ukraine_response
     return None
 
 
-async def swearing(msg: dict) -> Optional[str]:
+async def swearing(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     if is_message_contains_words(message, *constants.trash):
         return constants.trash_response
     return None
 
 
-async def hate_speech(msg: dict) -> Optional[str]:
+async def hate_speech(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     is_hate_speech = is_message_contains_words(message, *constants.hate_speech)
     if is_hate_speech:
@@ -73,28 +74,28 @@ async def hate_speech(msg: dict) -> Optional[str]:
     return None
 
 
-async def trista(msg: dict) -> Optional[str]:
+async def trista(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     if is_message_ends_with_word(message, constants.tractor_driver):
         return random.choice(constants.trista)
     return None
 
 
-async def net(msg: dict) -> Optional[str]:
+async def net(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     if is_message_ends_with_word(message, constants.no_means_no):
         return random.choice(constants.net)
     return None
 
 
-async def base_dog_trigger(url: str, msg: dict, *trigger_words: str) -> Optional[str]:
+async def base_dog_trigger(url: str, msg: dict, *trigger_words: str) -> str | None:
     message = msg.get("text", "").lower()
     if is_message_contains_words_and_emojis(message, *trigger_words):
         return await get_dog.get(url)
     return None
 
 
-async def random_frog(msg: dict) -> Optional[str]:
+async def random_frog(msg: dict) -> str | None:
     random_frog_url = "https://www.generatormix.com/random-frogs"
     message = msg.get("text", "").lower()
     if is_message_contains_words_and_emojis(message, *constants.random_frog):
@@ -102,12 +103,12 @@ async def random_frog(msg: dict) -> Optional[str]:
     return None
 
 
-async def random_dog(msg: dict) -> Optional[str]:
+async def random_dog(msg: dict) -> str | None:
     random_dog_url = "https://dog.ceo/api/breeds/image/random"
     return await base_dog_trigger(random_dog_url, msg, *constants.random_dog)
 
 
-async def corgi(msg: dict) -> Optional[str]:
+async def corgi(msg: dict) -> str | None:
     corgi_url = random.choice(
         (
             "https://dog.ceo/api/breed/corgi/images/random",
@@ -117,29 +118,29 @@ async def corgi(msg: dict) -> Optional[str]:
     return await base_dog_trigger(corgi_url, msg, *constants.corgi)
 
 
-async def shibe(msg: dict) -> Optional[str]:
+async def shibe(msg: dict) -> str | None:
     shibe_url = "http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false"
     return await base_dog_trigger(shibe_url, msg, *constants.shibe)
 
 
-async def toy(msg: dict) -> Optional[str]:
+async def toy(msg: dict) -> str | None:
     toy_url = "https://dog.ceo/api/breed/terrier/toy/images/random"
     return await base_dog_trigger(toy_url, msg, *constants.toy)
 
 
-async def pug(msg: dict) -> Optional[str]:
+async def pug(msg: dict) -> str | None:
     pug_url = "https://dog.ceo/api/breed/pug/images/random"
     return await base_dog_trigger(pug_url, msg, *constants.pug)
 
 
-async def terrier(msg: dict) -> Optional[str]:
+async def terrier(msg: dict) -> str | None:
     terrier_url = "https://dog.ceo/api/breed/terrier/images/random"
     return await base_dog_trigger(terrier_url, msg, *constants.terrier)
 
 
-async def show_social_credit(msg: dict) -> Optional[str]:
+async def show_social_credit(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["social_credit_command"]["command"]
     ):
@@ -148,7 +149,7 @@ async def show_social_credit(msg: dict) -> Optional[str]:
     return None
 
 
-async def add_social_credit(msg: dict) -> Optional[str]:
+async def add_social_credit(msg: dict) -> str | None:
     sticker = msg.get("sticker", {})
     reply_message = msg.get("reply_to_message", {})
     chat_id = str(msg["chat"]["id"])
@@ -169,9 +170,9 @@ async def add_social_credit(msg: dict) -> Optional[str]:
     return None
 
 
-async def add_birthday(msg: dict) -> Optional[str | tuple[str, dict]]:
+async def add_birthday(msg: dict) -> str | tuple[str, dict] | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["add_birthday_command"]["command"]
     ):
@@ -184,18 +185,22 @@ async def add_birthday(msg: dict) -> Optional[str | tuple[str, dict]]:
                 return f"Updated {user['first_name']}'s birthday - {date}"
         force_reply = {"force_reply": True, "selective": True}
         error_reply_args = {
+            "text": constants.birthday_error_reply,
+            "chat_id": chat_id,
             "reply_to_message_id": msg["message_id"],
             "reply_markup": force_reply,
         }
-        return constants.birthday_error_reply, error_reply_args
+        return "send_message", error_reply_args
     return None
 
 
-async def add_birthday_from_reply(msg: dict) -> Optional[str | tuple[str, dict]]:
-    message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+async def add_birthday_from_reply(msg: dict) -> str | tuple[str, dict] | None:
     reply = msg.get("reply_to_message", {})
-    is_reply_from_bot = reply.get("from", {}).get("is_bot", "")
+    if not reply:
+        return None
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    is_reply_from_bot = reply["from"]["is_bot"]
     is_reply_text_birthday = reply.get("text", "") == constants.birthday_error_reply
     if reply and is_reply_from_bot and is_reply_text_birthday:
         if is_date(message):
@@ -205,18 +210,21 @@ async def add_birthday_from_reply(msg: dict) -> Optional[str | tuple[str, dict]]
         else:
             force_reply = {"force_reply": True, "selective": True}
             error_reply_args = {
+                "text": constants.birthday_error_reply,
                 "reply_to_message_id": msg["message_id"],
                 "reply_markup": force_reply,
             }
-            return constants.birthday_error_reply, error_reply_args
+            return "send_message", error_reply_args
     return None
 
 
-async def add_birthday_inline(msg: dict) -> Optional[str]:
-    message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+async def add_birthday_inline(msg: dict) -> str | None:
     via_bot = msg.get("via_bot", {})
-    bot_name = via_bot.get("first_name", "")
+    if not via_bot:
+        return None
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    bot_name = via_bot["first_name"]
 
     if bot_name in constants.MY_BOTS:
         date = message[-5:]
@@ -226,9 +234,9 @@ async def add_birthday_inline(msg: dict) -> Optional[str]:
     return None
 
 
-async def list_all_birthdays(msg: dict) -> Optional[str]:
+async def list_all_birthdays(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["list_all_birthdays_command"]["command"]
     ):
@@ -236,9 +244,9 @@ async def list_all_birthdays(msg: dict) -> Optional[str]:
     return None
 
 
-async def add_location2(msg: dict) -> Optional[str]:
+async def add_location2(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     add_location_error_reply = f"Try these locations or ask {constants.maintainer} to add new\n{locations_text}"
     if is_message_startswith(
         message, constants.commands["location_command"]["command"]
@@ -256,22 +264,25 @@ async def add_location2(msg: dict) -> Optional[str]:
     return None
 
 
-async def ping_location2(msg: dict) -> Optional[str]:
+async def ping_location2(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     template = '<a href="tg://user?id={}">{}</a>'
     for loc in locations:
         if is_message_contains_phrases(message, *loc.mention_tags):
             users = get_people_from_location(chat_id, loc.name)
             return ", ".join(
-                [template.format(user.user_id, user.username) for user in users]
+                [
+                    template.format(user.user_id, user.username or user.first_name)
+                    for user in users
+                ]
             )
     return None
 
 
-async def where_all_location(msg: dict) -> Optional[str]:
+async def where_all_location(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["where_all_command"]["command"]
     ):
@@ -285,8 +296,29 @@ async def where_all_location(msg: dict) -> Optional[str]:
     return None
 
 
-async def help(msg: dict) -> Optional[str]:
+async def help(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     if is_message_startswith(message, constants.commands["help_command"]["command"]):
         return constants.help_message
+    return None
+
+
+async def chat_title(msg: dict) -> tuple[str, dict] | None:
+    message = msg.get("text", "")
+    chat_id = msg["chat"]["id"]
+    if is_message_startswith(message, *constants.change_title_prefixes):
+        return "set_chat_title", {"chat_id": chat_id, "text": message}
+    return None
+
+
+async def new_chat_member(msg: dict) -> tuple[str, dict] | None:
+    new_chat_member = msg.get("new_chat_member", "")
+    if new_chat_member:
+        message_id = msg["message_id"]
+        chat_id = msg["chat"]["id"]
+        return "send_sticker", {
+            "chat_id": chat_id,
+            "sticker_id": constants.greeting_sticker,
+            "reply_to_message_id": message_id,
+        }
     return None

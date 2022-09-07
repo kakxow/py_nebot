@@ -2,8 +2,7 @@ import asyncio
 
 from nechatbot import calendar
 from nechatbot.bot import Bot
-from nechatbot.constants import BOT_TOKEN
 
 
-bot = Bot(BOT_TOKEN)
+bot = Bot()
 asyncio.run(calendar.congrats_today_birthdays(bot))

@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class User:
-    user_id: str
+    user_id: int
     first_name: str
     last_name: str = ""
     username: str = ""
@@ -20,20 +20,28 @@ class User:
 
 @dataclass
 class Chat:
-    chat_id: str
-    users: dict[str, User] = field(default_factory=dict)
+    chat_id: int
+    users: dict[int, User] = field(default_factory=dict)
 
 
 def encode_chat(chat: Chat) -> dict:
     return chat.__dict__
 
 
-def decode_chats(dct: dict) -> Chat | User | dict[str, Chat] | dict[str, User]:
+def decode_chats(dct: dict) -> Chat | User | dict[int, Chat] | dict[int, User]:
     if "user_id" in dct:
+        dct["user_id"] = int(dct["user_id"])
         return User(**dct)
     if "chat_id" in dct:
+        dct["chat_id"] = int(dct["chat_id"])
         return Chat(**dct)
-    return dct
+    new_d = {}
+    for k, v in dct.items():
+        if isinstance(k, str) and (k.isnumeric() or k[0] == "-" and k[1:].isnumeric()):
+            new_d[int(k)] = v
+        else:
+            new_d[k] = v
+    return new_d
 
 
 def make_user(d: dict) -> User:
