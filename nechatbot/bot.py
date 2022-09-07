@@ -2,13 +2,11 @@ import asyncio
 import json
 import logging
 
-import aiofiles  # type: ignore
-import httpx  # type: ignore
+import httpx
 
 from .constants import BASE_URL, POLL_TIMEOUT, commands, WEBHOOK_URL, SECURITY_KEY
 
-
-filename = "last_update_id.txt"
+KwargsType = dict[str, str | int | bool]
 
 
 class Bot:
@@ -16,11 +14,6 @@ class Bot:
         self.logger = logging.getLogger(__name__)
         self.client = httpx.AsyncClient(base_url=BASE_URL)
         self.timeout = POLL_TIMEOUT
-        self.token = token
-        try:
-            with open(filename, mode="r") as f:
-                self.last_update_id = int(f.read())
-        except FileNotFoundError:
             self.last_update_id = 0
         self.logger.info("bot initialized")
 
@@ -86,8 +79,6 @@ class Bot:
             self.logger.debug("%s updates received.", len(updates))
             last_update = max(updates, key=lambda x: x["update_id"])
             self.last_update_id = last_update["update_id"] + 1
-            async with aiofiles.open(filename, mode="w") as f:
-                await f.write(str(self.last_update_id))
         return updates
 
     async def delete_message(self, chat_id: int, message_id: int) -> None:
