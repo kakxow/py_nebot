@@ -31,10 +31,14 @@ class Bot:
 
     async def dispatch_update(self, update: dict) -> None:
         self.logger.debug("%s", update)
-        if update.get("inline_query", {}):
-            asyncio.ensure_future(self.on_inline_query(update.get("inline_query", {})))
-        else:
-            asyncio.ensure_future(self.on_message(update.get("message", {})))
+        match update:
+            case {"inline_query": inline_query}:
+                method = self.on_inline_query(inline_query)
+            case {"message": message}:
+                method = self.on_message(message)
+            case _:
+                pass
+        asyncio.ensure_future(method)
 
         url = "/setWebhook"
         data = {"url": webhook_url, "secret_token": SECURITY_KEY}
