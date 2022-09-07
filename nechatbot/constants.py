@@ -7,7 +7,8 @@ import dotenv  # type: ignore
 dotenv.load_dotenv()
 LOGGING_LEVEL = int(os.getenv("LOGGING_LEVEL", logging.INFO))
 TG_API_URL = "https://api.telegram.org"
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+BASE_URL = f"{TG_API_URL}/bot{BOT_TOKEN}"
 POLL_TIMEOUT = int(os.getenv("POLL_TIMEOUT", 60))
 WEBHOOK_URL = os.getenv("WEBHOOK_URL", "")
 
