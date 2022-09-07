@@ -272,7 +272,10 @@ async def ping_location2(msg: dict) -> str | None:
         if is_message_contains_phrases(message, *loc.mention_tags):
             users = get_people_from_location(chat_id, loc.name)
             return ", ".join(
-                [template.format(user.user_id, user.username) for user in users]
+                [
+                    template.format(user.user_id, user.username or user.first_name)
+                    for user in users
+                ]
             )
     return None
 
