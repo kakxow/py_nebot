@@ -1,7 +1,7 @@
 import logging
 import os
 
-import dotenv  # type: ignore
+import dotenv
 
 
 dotenv.load_dotenv()
@@ -15,6 +15,7 @@ WEBHOOK_URL = os.getenv("WEBHOOK_URL", "")
 JSON_URL = "https://json.extendsclass.com/bin/"
 SECURITY_KEY = JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
 JSON_BIN_ID = os.environ["JSON_BIN_ID"]
+BIN_URL = f"{JSON_URL}/{JSON_BIN_ID}"
 
 SOCIAL_CREDIT_INCREMENT = 20
 

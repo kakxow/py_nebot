@@ -1,19 +1,17 @@
 import json
 from typing import Any
-from urllib.parse import urljoin, quote
 
 import httpx
 
-from . import constants
+from .constants import JSON_SECURITY_KEY, BIN_URL
 from .nechat_types import Chat, encode_chat, decode_chats, make_user, User
 
 
-bin_url = url = urljoin(constants.JSON_URL, quote(constants.JSON_BIN_ID))
-headers = {"Security-key": constants.JSON_SECURITY_KEY}
+headers = {"Security-key": JSON_SECURITY_KEY}
 
 
 def get_chats() -> dict[int, Chat]:
-    result = httpx.get(bin_url, headers=headers)
+    result = httpx.get(BIN_URL, headers=headers)
     result.raise_for_status()
     chats = result.json(object_hook=decode_chats)
     return chats
@@ -21,7 +19,7 @@ def get_chats() -> dict[int, Chat]:
 
 def update_chats(chats: dict[int, Chat]) -> None:
     data = json.dumps(chats, default=encode_chat)
-    result = httpx.put(bin_url, data=data, headers=headers)
+    result = httpx.put(BIN_URL, data=data, headers=headers)
     result.raise_for_status()
 
 
