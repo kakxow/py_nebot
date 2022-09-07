@@ -30,10 +30,18 @@ def encode_chat(chat: Chat) -> dict:
 
 def decode_chats(dct: dict) -> Chat | User | dict[int, Chat] | dict[int, User]:
     if "user_id" in dct:
+        dct["user_id"] = int(dct["user_id"])
         return User(**dct)
     if "chat_id" in dct:
+        dct["chat_id"] = int(dct["chat_id"])
         return Chat(**dct)
-    return dct
+    new_d = {}
+    for k, v in dct.items():
+        if isinstance(k, str) and (k.isnumeric() or k[0] == "-" and k[1:].isnumeric()):
+            new_d[int(k)] = v
+        else:
+            new_d[k] = v
+    return new_d
 
 
 def make_user(d: dict) -> User:
