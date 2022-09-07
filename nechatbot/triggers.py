@@ -140,7 +140,7 @@ async def terrier(msg: dict) -> str | None:
 
 async def show_social_credit(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["social_credit_command"]["command"]
     ):
@@ -172,7 +172,7 @@ async def add_social_credit(msg: dict) -> str | None:
 
 async def add_birthday(msg: dict) -> str | tuple[str, dict] | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["add_birthday_command"]["command"]
     ):
@@ -196,9 +196,9 @@ async def add_birthday(msg: dict) -> str | tuple[str, dict] | None:
 
 async def add_birthday_from_reply(msg: dict) -> str | tuple[str, dict] | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     reply = msg.get("reply_to_message", {})
-    is_reply_from_bot = reply.get("from", {}).get("is_bot", "")
+    is_reply_from_bot = reply["from"].get["is_bot"]
     is_reply_text_birthday = reply.get("text", "") == constants.birthday_error_reply
     if reply and is_reply_from_bot and is_reply_text_birthday:
         if is_date(message):
@@ -218,9 +218,9 @@ async def add_birthday_from_reply(msg: dict) -> str | tuple[str, dict] | None:
 
 async def add_birthday_inline(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     via_bot = msg.get("via_bot", {})
-    bot_name = via_bot.get("first_name", "")
+    bot_name = via_bot["first_name"]
 
     if bot_name in constants.MY_BOTS:
         date = message[-5:]
@@ -232,7 +232,7 @@ async def add_birthday_inline(msg: dict) -> str | None:
 
 async def list_all_birthdays(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["list_all_birthdays_command"]["command"]
     ):
@@ -242,7 +242,7 @@ async def list_all_birthdays(msg: dict) -> str | None:
 
 async def add_location2(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     add_location_error_reply = f"Try these locations or ask {constants.maintainer} to add new\n{locations_text}"
     if is_message_startswith(
         message, constants.commands["location_command"]["command"]
@@ -262,7 +262,7 @@ async def add_location2(msg: dict) -> str | None:
 
 async def ping_location2(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     template = '<a href="tg://user?id={}">{}</a>'
     for loc in locations:
         if is_message_contains_phrases(message, *loc.mention_tags):
@@ -275,7 +275,7 @@ async def ping_location2(msg: dict) -> str | None:
 
 async def where_all_location(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(
         message, constants.commands["where_all_command"]["command"]
     ):
@@ -298,7 +298,7 @@ async def help(msg: dict) -> str | None:
 
 async def chat_title(msg: dict) -> tuple[str, dict] | None:
     message = msg.get("text", "")
-    chat_id = str(msg["chat"]["id"])
+    chat_id = msg["chat"]["id"]
     if is_message_startswith(message, *constants.change_title_prefixes):
         return "set_chat_title", {"chat_id": chat_id, "text": message}
     return None
@@ -308,7 +308,7 @@ async def new_chat_member(msg: dict) -> tuple[str, dict] | None:
     new_chat_member = msg.get("new_chat_member", "")
     if new_chat_member:
         message_id = msg["message_id"]
-        chat_id = str(msg["chat"]["id"])
+        chat_id = msg["chat"]["id"]
         return "send_sticker", {
             "chat_id": chat_id,
             "sticker_id": constants.greeting_sticker,
