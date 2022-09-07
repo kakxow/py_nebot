@@ -217,9 +217,11 @@ async def add_birthday_from_reply(msg: dict) -> str | tuple[str, dict] | None:
 
 
 async def add_birthday_inline(msg: dict) -> str | None:
+    via_bot = msg.get("via_bot", {})
+    if not via_bot:
+        return None
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
-    via_bot = msg.get("via_bot", {})
     bot_name = via_bot["first_name"]
 
     if bot_name in constants.MY_BOTS:
