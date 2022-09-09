@@ -37,7 +37,7 @@ class Bot:
             case {"message": message}:
                 method = self.on_message(message)
             case _:
-                pass
+                return None
         asyncio.ensure_future(method)
 
     async def set_webhook(self, webhook_url: str = WEBHOOK_URL) -> None:
