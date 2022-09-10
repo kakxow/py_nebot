@@ -61,7 +61,14 @@ class Bot:
         self.logger.debug("Message to send - %s", text)
         data = {"text": text, "chat_id": chat_id, "parse_mode": "HTML", **kwargs}
         response = await self.client.post(url, json=data)
-        return json.loads(response.text)["result"]
+        result = json.loads(response.text).get("result", {})
+        if not result:
+            self.logger.debug(
+                "Sending message failed. response %s, response text: %s",
+                response,
+                response.text,
+            )
+        return result
 
     async def set_chat_title(self, chat_id: int, text: str) -> None:
         url = "/setChatTitle"
@@ -74,7 +81,7 @@ class Bot:
         response = await self.client.post(url, json=data)
         if response.is_error:
             return {}
-        return json.loads(response.text)["result"]
+        return json.loads(response.text).get("result", {})
 
     async def poll(self) -> list[dict]:
         url = "/getUpdates"
@@ -86,7 +93,14 @@ class Bot:
         except httpx._exceptions.HTTPError:
             updates = []
         else:
-            updates = json.loads(response.text)["result"]
+            load = json.loads(response.text)
+            if "result" not in load:
+                self.logger.debug(
+                    "Getting update failed. response %s, response text: %s",
+                    response,
+                    response.text,
+                )
+            updates = load["result"]
         if updates:
             self.logger.debug("%s updates received.", len(updates))
             last_update = max(updates, key=lambda x: x["update_id"])
