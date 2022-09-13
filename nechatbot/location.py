@@ -38,6 +38,7 @@ locations = (
 )
 
 tag_to_name = {loc.name: loc.city_name for loc in locations}
+name_to_tag = {loc.name: loc.mention_tags for loc in locations}
 
 locations_text = "\n".join(
     (f"{loc.city_name} - {', '.join(loc.registration_tags)}" for loc in locations)

@@ -3,6 +3,13 @@ from dataclasses import dataclass, field
 
 
 @dataclass
+class Tag:
+    name: str
+    description: str
+    tags: list[str]
+
+
+@dataclass
 class User:
     user_id: int
     first_name: str
@@ -11,6 +18,7 @@ class User:
     birthday: str = ""
     credit: int = 0
     location: str = ""
+    tags: list[str] = []
 
     def update(self, updates: dict) -> User:
         updates = {k: v for k, v in updates.items() if k in User.__annotations__.keys()}

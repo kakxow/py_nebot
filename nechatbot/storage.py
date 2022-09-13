@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, Callable
 
 import httpx
 
@@ -11,10 +11,32 @@ headers = {"Security-key": JSON_SECURITY_KEY}
 
 
 def get_chats() -> dict[int, Chat]:
-    result = httpx.get(BIN_URL, headers=headers)
-    result.raise_for_status()
-    chats = result.json(object_hook=decode_chats)
-    return chats
+    return fetch_storage("chats", decode_chats)
+
+
+def fetch_storage(term: str, json_decoder: Callable = json.JSONDecoder) -> dict:
+    response = httpx.get(BIN_URL, headers=headers)
+    response.raise_for_status()
+    match term:
+        case "chats":
+            return response.json(object_hook=json_decoder)
+        case "tags":
+            return response.json(object_hook=json_decoder)
+    return {}
+
+
+def update_storage(
+    term: str, data: dict, json_encoder: Callable = json.JSONEncoder
+) -> None:
+    patch_command = [
+        {
+            "op": "replace",
+            "path": f"/{term}",
+            "value": json.dumps(data, default=json_encoder),
+        }
+    ]
+    response = httpx.patch(BIN_URL, json=patch_command)
+    response.raise_for_status()
 
 
 def update_chats(chats: dict[int, Chat]) -> None:

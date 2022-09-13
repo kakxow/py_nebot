@@ -2,14 +2,15 @@ import random
 
 from .location import (
     change_location,
-    get_people_from_location,
     get_locations_with_people,
     locations,
     locations_text,
 )
 from . import constants, get_dog, get_frog
-from . import calendar, social_credit
+from . import calendar, social_credit, tags
 from .predicates import (
+    extract_tags,
+    extract_words,
     is_message_contains_words,
     is_message_contains_words_and_emojis,
     is_message_ends_with_word,
@@ -264,22 +265,6 @@ async def add_location2(msg: dict) -> str | None:
     return None
 
 
-async def ping_location2(msg: dict) -> str | None:
-    message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
-    template = '<a href="tg://user?id={}">{}</a>'
-    for loc in locations:
-        if is_message_contains_phrases(message, *loc.mention_tags):
-            users = get_people_from_location(chat_id, loc.name)
-            return ", ".join(
-                [
-                    template.format(user.user_id, user.username or user.first_name)
-                    for user in users
-                ]
-            )
-    return None
-
-
 async def where_all_location(msg: dict) -> str | None:
     message = msg.get("text", "").lower()
     chat_id = msg["chat"]["id"]
@@ -322,3 +307,66 @@ async def new_chat_member(msg: dict) -> tuple[str, dict] | None:
             "reply_to_message_id": message_id,
         }
     return None
+
+
+async def ping(msg: dict) -> str | None:
+    """any tags - location included"""
+    message = msg.get("text", "").lower()
+    tags_in_message = extract_tags(message)
+    if not tags_in_message:
+        return None
+    chat_id = msg["chat"]["id"]
+    template = '<a href="tg://user?id={}">{}</a>'
+    valid_tags, invalid_tags = tags.validate_tags(tags_in_message)
+    response = ""
+    if valid_tags:
+        users = tags.fetch_users_with_tags(chat_id, valid_tags)
+        response += (
+            ", ".join(
+                [
+                    template.format(user.user_id, user.username or user.first_name)
+                    for user in users
+                ]
+            )
+            + "\n"
+        )
+    if invalid_tags:
+        response += (
+            "These tags do not exist, create them via /create_tag command or check the list via /all_tags command: \n"
+            + ", ".join(invalid_tags)
+        )
+    return response
+
+
+async def add_tag(msg: dict) -> str | None:
+    message = msg.get("text", "")
+
+    if is_message_startswith(message, constants.commands["add_tag"]["command"]):
+        command_args = message.split(maxsplit=2)
+        if len(command_args) >= 2:
+            tags_to_add = extract_words(command_args[1])
+            valid_tags, invalid_tags = tags.validate_tags(tags_to_add)
+            response = ""
+            if valid_tags:
+                chat_id = msg["chat"]["id"]
+                user_id = msg["from"]["id"]
+                tags.add_tags(chat_id, user_id, valid_tags)
+                response = f"Tags added - {', '.join(valid_tags)}"
+            if invalid_tags:
+                response += (
+                    "These tags do not exist, create them via /create_tag command or check the list via /all_tags command: \n"
+                    + ", ".join(invalid_tags)
+                )
+            return response
+        return "No tags specified, create a tag via /create_tag command or check the list via /all_tags command."
+    return None
+
+
+async def create_tag(msg: dict) -> str | None:
+    message = msg.get("text", "")
+
+    if is_message_startswith(message, constants.commands["create_tag"]["command"]):
+        command_args = message.split(maxsplit=2)
+        if len(command_args) >= 2:
+            
+        return "No tag specified."

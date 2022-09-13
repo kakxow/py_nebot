@@ -20,6 +20,7 @@ WORDS_AND_EMOJIS_PATTERN = re.compile(
     "\U00002702-\U000027B0"  # Dingbats
     r"]|\w+"
 )  # https://gist.github.com/Alex-Just/e86110836f3f93fe7932290526529cd1#gistcomment-3236190
+TAGS_PATTERN = re.compile(r"@\w+")
 
 
 def extract_words_and_emojis(message: str) -> set[str]:
@@ -77,3 +78,8 @@ def is_date(text: str) -> bool:
     except ValueError:
         return False
     return True
+
+
+def extract_tags(text: str) -> set[str]:
+    tags = TAGS_PATTERN.findall(text.lower())
+    return set(tags)
