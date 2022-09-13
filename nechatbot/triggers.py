@@ -210,6 +210,7 @@ async def add_birthday_from_reply(msg: dict) -> str | tuple[str, dict] | None:
         else:
             force_reply = {"force_reply": True, "selective": True}
             error_reply_args = {
+                "chat_id": chat_id,
                 "text": constants.birthday_error_reply,
                 "reply_to_message_id": msg["message_id"],
                 "reply_markup": force_reply,
