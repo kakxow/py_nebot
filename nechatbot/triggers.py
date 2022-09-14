@@ -31,7 +31,7 @@ __all__ = [
     "pug",
     "terrier",
     "trista",
-    "net",
+    # "net",
     # "add_social_credit",
     # "show_social_credit",
     "add_birthday",
