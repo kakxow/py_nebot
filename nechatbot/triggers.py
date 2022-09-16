@@ -7,7 +7,7 @@ from .location import (
     locations,
     locations_text,
 )
-from . import constants, get_dog, get_frog
+from . import constants, get_dog, get_frog, exchange
 from . import calendar, social_credit
 from .predicates import (
     is_message_contains_words,
@@ -322,4 +322,15 @@ async def new_chat_member(msg: dict) -> tuple[str, dict] | None:
             "sticker_id": constants.greeting_sticker,
             "reply_to_message_id": message_id,
         }
+    return None
+
+async def get_rates(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    return None
+async def exchange_convert(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    if is_message_startswith(message, constants.commands["get_rates_command"]["command"]):
+        return await exchange()
     return None
