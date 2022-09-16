@@ -33,6 +33,7 @@ trash = (
     "хуй",
 )
 trash_response = "а давайте не материться"
+
 hate_speech = (
     "пидор",
     "пидр",
@@ -166,6 +167,14 @@ commands = {
     "help_command": {
         "command": "/help",
         "description": "Описание бота.",
+    },
+    "convert_command": {
+        "command": "/convert",
+        "description": "Конвертировать валюту.",
+    },
+    "get_rates_command": {
+        "command": "/rates",
+        "description": "Получить курс валют к 1 баксу.",
     },
 }
 
