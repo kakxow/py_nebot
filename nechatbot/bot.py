@@ -95,11 +95,12 @@ class Bot:
         else:
             load = json.loads(response.text)
             if "result" not in load:
-                self.logger.debug(
+                self.logger.error(
                     "Getting update failed. response %s, response text: %s",
                     response,
                     response.text,
                 )
+                return []
             updates = load["result"]
         if updates:
             self.logger.debug("%s updates received.", len(updates))
