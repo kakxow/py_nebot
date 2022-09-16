@@ -4,9 +4,12 @@ from asgi_tools import App, ResponseError, Request
 
 from main import bot
 from nechatbot.calendar import congrats_today_birthdays
-from nechatbot.constants import SECURITY_KEY
+from nechatbot.constants import SECURITY_KEY, POLL
 
 app = App()
+
+if POLL:
+    asyncio.get_event_loop().run_until_complete(bot.start())
 
 
 @app.route("/", methods=["POST"])

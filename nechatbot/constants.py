@@ -11,6 +11,7 @@ BOT_TOKEN = os.environ["BOT_TOKEN"]
 BASE_URL = f"{TG_API_URL}/bot{BOT_TOKEN}"
 POLL_TIMEOUT = int(os.getenv("POLL_TIMEOUT", 60))
 WEBHOOK_URL = os.getenv("WEBHOOK_URL", "")
+POLL = os.getenv("POLL", 0)
 
 JSON_URL = "https://json.extendsclass.com/bin/"
 SECURITY_KEY = JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
