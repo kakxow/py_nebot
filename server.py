@@ -29,7 +29,7 @@ async def health_check(_request: Request) -> tuple[int, str]:
 
 @app.route("/check_birthdays", methods=["GET"])
 async def check_birthdays(request: Request) -> tuple[int, str] | ResponseError:
-    if request.headers["Security-key"] == SECURITY_KEY:
+    if request.headers.get("Security-key") == SECURITY_KEY:
         await congrats_today_birthdays(bot)
         return 200, "OK"
     return ResponseError(status_code=401)
