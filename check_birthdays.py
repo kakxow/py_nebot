@@ -5,4 +5,4 @@ from nechatbot.bot import Bot
 
 
 bot = Bot()
-asyncio.run(calendar.congrats_today_birthdays(bot))
+asyncio.get_event_loop().run_until_complete(calendar.congrats_today_birthdays(bot))
