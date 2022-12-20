@@ -238,7 +238,7 @@ async def ping_location2(msg: dict) -> str | None:
             users = get_people_from_location(chat_id, loc.name)
             return ", ".join(
                 [
-                    template.format(user.user_id, user.username or user.first_name)
+                    template.format(user.id, user.username or user.first_name)
                     for user in users
                 ]
             )

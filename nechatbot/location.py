@@ -1,8 +1,8 @@
-from collections import defaultdict
 from dataclasses import dataclass, field
+from itertools import groupby
 
-from . import storage
-from .nechat_types import User, Chat
+from .db import Session, update_user
+from .nechat_db_types import User
 
 
 @dataclass
@@ -45,23 +45,32 @@ locations_text = "\n".join(
 
 
 def change_location(chat_id: int, user: dict, location: str) -> None:
-    storage.update_user(chat_id, user, location=location)
+    update_user(chat_id, user, {"location": location})
 
 
 def get_people_from_location(chat_id: int, location: str) -> list[User]:
-    chats = storage.get_chats()
-    chat = chats.get(chat_id, Chat(chat_id))
-    return [user for user in chat.users.values() if user.location == location]
+    with Session() as session:
+        users = (
+            session.query(User)
+            .filter(User.chat == chat_id, User.location == location)
+            .all()
+        )
+
+    return users
 
 
 def get_locations_with_people(chat_id: int) -> dict[str, list[User]]:
     """city_name : [{"id": , "first_name": , "last_name": , "username": , "location": }, ...]"""
-    chats = storage.get_chats()
-    chat = chats.get(chat_id, Chat(chat_id))
-    users_in_location = defaultdict(list)
-    for user in chat.users.values():
-        city_name = tag_to_name.get(user.location, "undefined")
-        users_in_location[city_name].append(user)
-    users_in_location.pop("undefined", None)
-    users_in_location.pop("remove", None)
-    return users_in_location
+    users_in_location: dict[str, list[User]] = {}
+    with Session() as session:
+        users = (
+            session.query(User)
+            .filter(User.chat == chat_id)
+            .order_by(User.location)
+            .all()
+        )
+        for location, group in groupby(users, lambda u: u.location):
+            city_name = tag_to_name.get(location, "remove")
+            users_in_location[city_name] = list(group)
+        users_in_location.pop("remove", None)
+        return users_in_location
