@@ -4,7 +4,13 @@ import oracledb
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .constants import ORACLE_DSN, ORACLE_USER_PW, ORACLE_WALLET_PW, ORACLE_USER_LOGIN
+from .constants import (
+    ORACLE_DSN,
+    ORACLE_USER_PW,
+    ORACLE_WALLET_PW,
+    ORACLE_USER_LOGIN,
+    ORACLE_WALLET_PATH,
+)
 from .nechat_db_types import User
 
 
@@ -16,8 +22,8 @@ engine = create_engine(
     f"oracle://{ORACLE_USER_LOGIN}:{ORACLE_USER_PW}@",
     connect_args={
         "dsn": ORACLE_DSN,
-        "config_dir": "/home/kakxow/Documents/nebot-oracle/Wallet_nebotbd",
-        "wallet_location": "/home/kakxow/Documents/nebot-oracle/Wallet_nebotbd",
+        "config_dir": ORACLE_WALLET_PATH,
+        "wallet_location": ORACLE_WALLET_PATH,
         "wallet_password": ORACLE_WALLET_PW,
     },
 )
