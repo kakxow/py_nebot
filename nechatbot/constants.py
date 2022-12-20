@@ -13,6 +13,11 @@ POLL_TIMEOUT = int(os.getenv("POLL_TIMEOUT", 60))
 WEBHOOK_URL = os.getenv("WEBHOOK_URL", "")
 POLL = os.getenv("POLL", 0)
 
+ORACLE_DSN = os.environ["oracle_dsn"]
+ORACLE_USER_PW = os.environ["oracle_user_pw"]
+ORACLE_WALLET_PW = os.environ["oracle_wallet_pw"]
+ORACLE_USER_LOGIN = os.environ["oracle_user"]
+
 JSON_URL = "https://json.extendsclass.com/bin/"
 SECURITY_KEY = JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
 JSON_BIN_ID = os.environ["JSON_BIN_ID"]
