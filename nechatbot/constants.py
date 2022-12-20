@@ -22,8 +22,6 @@ JSON_URL = "https://json.extendsclass.com/bin/"
 SECURITY_KEY = JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
 JSON_BIN_ID = os.environ["JSON_BIN_ID"]
 
-SOCIAL_CREDIT_INCREMENT = 20
-
 greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
 positive_credit_sticker_id = "AgADAgADf3BGHA"
 negative_credit_sticker_id = "AgADAwADf3BGHA"
@@ -148,10 +146,6 @@ no_means_no = "нет"
 report_message_delete_delay = 60
 
 commands = {
-    # "social_credit_command": {
-    #     "command": "/show_social_credit_scores",
-    #     "description": f"Вывести рейтинг социального доверия (автоудалится через {report_message_delete_delay} секунд)",
-    # },
     "add_birthday_command": {
         "command": "/add_birthday",
         "description": "Добавить своё ДР, чтобы бот потом всем напомнил. Укажи его в формате ДД.ММ через пробел после команды. Например, /add_birthday 03.09. Либо ответьте боту с корректной датой :)",

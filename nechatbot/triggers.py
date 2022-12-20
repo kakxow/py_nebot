@@ -7,8 +7,7 @@ from .location import (
     locations,
     locations_text,
 )
-from . import constants, get_dog, get_frog
-from . import calendar, social_credit
+from . import constants, get_dog, get_frog, calendar
 from .predicates import (
     is_message_contains_words,
     is_message_contains_words_and_emojis,
@@ -32,8 +31,6 @@ __all__ = [
     "terrier",
     "trista",
     # "net",
-    # "add_social_credit",
-    # "show_social_credit",
     "add_birthday",
     "list_all_birthdays",
     "add_birthday_inline",
@@ -46,7 +43,6 @@ __all__ = [
     "new_chat_member",
 ]
 auto_delete_list = [
-    "show_social_credit",
     # "where_all_location",
     # "help",
 ]
@@ -136,38 +132,6 @@ async def pug(msg: dict) -> str | None:
 async def terrier(msg: dict) -> str | None:
     terrier_url = "https://dog.ceo/api/breed/terrier/images/random"
     return await base_dog_trigger(terrier_url, msg, *constants.terrier)
-
-
-async def show_social_credit(msg: dict) -> str | None:
-    message = msg.get("text", "").lower()
-    chat_id = msg["chat"]["id"]
-    if is_message_startswith(
-        message, constants.commands["social_credit_command"]["command"]
-    ):
-        print("Getting all credit scores.")
-        return social_credit.get_all_scores_pretty(chat_id)
-    return None
-
-
-async def add_social_credit(msg: dict) -> str | None:
-    sticker = msg.get("sticker", {})
-    reply_message = msg.get("reply_to_message", {})
-    chat_id = str(msg["chat"]["id"])
-    if sticker and reply_message:
-        sticker_id = sticker["file_unique_id"]
-        reply_user = reply_message["from"]
-        message_user = msg["from"]
-        if reply_user == message_user:
-            return None
-        if sticker_id == constants.positive_credit_sticker_id:
-            social_credit.update_or_add_social_credit(
-                chat_id, reply_user, constants.SOCIAL_CREDIT_INCREMENT
-            )
-        elif sticker_id == constants.negative_credit_sticker_id:
-            social_credit.update_or_add_social_credit(
-                chat_id, reply_user, -constants.SOCIAL_CREDIT_INCREMENT
-            )
-    return None
 
 
 async def add_birthday(msg: dict) -> str | tuple[str, dict] | None:
