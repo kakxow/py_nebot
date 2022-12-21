@@ -14,3 +14,4 @@ urllib3==1.26.5
 asgi_tools==0.64.1
 oracledb==1.2.1
 SQLAlchemy==1.4.45
+alembic==1.9.0
