@@ -43,6 +43,7 @@ class Tag(Base):
 
     id = Column(Integer, Identity(), primary_key=True)
     name = Column(String(64), unique=True, nullable=False)
+    group = Column(String(64))
     users = relationship(
         "User", secondary=tags_for_users, back_populates="tags", collection_class=list
     )
