@@ -25,19 +25,14 @@ tags_for_users = Table(
     ),
 )
 
-mentions_for_tags = Table(
-    "mentions_for_tags",
-    Base.metadata,
-    Column("tag_id", ForeignKey("tags.id"), primary_key=True),
-    Column("mention_id", ForeignKey("mention_tags.id"), primary_key=True),
-)
-
 
 class MentionTag(Base):
     __tablename__ = "mention_tags"
 
     id = Column(Integer, Identity(), primary_key=True)
     name = Column(String(64), unique=True, nullable=False)
+    tag_id = Column(Integer, ForeignKey("tags.id", ondelete="CASCADE"), nullable=False)
+    tag = relationship("Tag", back_populates="mentions")
 
     def __repr__(self) -> str:
         return "<MentionTag(name='%s')>" % (self.name,)
@@ -48,8 +43,15 @@ class Tag(Base):
 
     id = Column(Integer, Identity(), primary_key=True)
     name = Column(String(64), unique=True, nullable=False)
+    users = relationship(
+        "User", secondary=tags_for_users, back_populates="tags", collection_class=list
+    )
     mentions = relationship(
-        MentionTag, secondary=mentions_for_tags, collection_class=list
+        "MentionTag",
+        back_populates="tag",
+        cascade="save-update, merge, delete, delete-orphan",
+        collection_class=list,
+        passive_deletes=True,
     )
 
     def __repr__(self) -> str:
@@ -70,7 +72,9 @@ class User(Base):
     birthday = Column(String(64))
     credit = Column(Integer)
     location = Column(String(64))
-    tags = relationship(Tag, secondary=tags_for_users, collection_class=list)
+    tags = relationship(
+        Tag, secondary=tags_for_users, collection_class=list, back_populates="users"
+    )
 
     def __repr__(self) -> str:
         return "<User(first_name='%s', last_name='%s', username='%s')>" % (
@@ -78,3 +82,13 @@ class User(Base):
             self.last_name,
             self.username,
         )
+
+
+def user_from_dict(telegram_user: dict, chat_id: int) -> User:
+    return User(
+        id=telegram_user["id"],
+        chat=chat_id,
+        first_name=telegram_user["first_name"],
+        last_name=telegram_user.get("last_name", ""),
+        username=telegram_user.get("username", ""),
+    )
