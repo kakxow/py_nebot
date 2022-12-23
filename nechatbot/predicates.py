@@ -3,6 +3,7 @@ import re
 
 
 WORDS_PATTERN = re.compile(r"\w+")
+TAGS_PATTERN = re.compile(r"@\w+")
 FIRST_WORD_PATTERN = re.compile(r"^\w+")
 LAST_WORD_PATTERN = re.compile(r"\w+$")
 WORDS_AND_EMOJIS_PATTERN = re.compile(
@@ -77,3 +78,8 @@ def is_date(text: str) -> bool:
     except ValueError:
         return False
     return True
+
+
+def extract_mentions(text: str) -> set[str]:
+    tags = TAGS_PATTERN.findall(text.lower())
+    return set(tags)

@@ -165,6 +165,38 @@ commands = {
         "command": "/help",
         "description": "Описание бота.",
     },
+    "list_tags": {
+        "command": "/list_tags",
+        "description": "Вывести все тэги и меншены к ним.",
+    },
+    "assign_tags": {
+        "command": "/assign_tags",
+        "description": "Назначить себе тэг(и), /assign_tags anime freebsd",
+    },
+    "create_tag": {
+        "command": "/create_tag",
+        "description": "Создать новый тэг. /create_tag anime nya kawaii",
+    },
+    "free_tags": {
+        "command": "/free_tags",
+        "description": "Убрать себе тэг(и). /free_tags anime freebsd",
+    },
+    "free_all_tags": {
+        "command": "/free_all_tags",
+        "description": "Убрать себе все тэги.",
+    },
+    "your_tags": {
+        "command": "/your_tags",
+        "description": "Посмотреть свои тэги.",
+    },
+    "update_tag": {
+        "command": "/update_tag",
+        "description": "Обновить список меншенов тэгу /update_tags anime nya kawaii uwu owo",
+    },
+    "create_location": {
+        "command": "/create_location",
+        "description": "Добавить новую локацию /create_location Batumi bat bus btm",
+    },
 }
 
 commands_for_help = "\n".join(
