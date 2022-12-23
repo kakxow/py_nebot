@@ -7,8 +7,9 @@ from .location import (
     locations,
     locations_text,
 )
-from . import constants, get_dog, get_frog, calendar
+from . import constants, get_dog, get_frog, calendar, tags
 from .predicates import (
+    extract_mentions,
     is_message_contains_words,
     is_message_contains_words_and_emojis,
     is_message_ends_with_word,
@@ -41,6 +42,16 @@ __all__ = [
     "add_birthday_from_reply",
     "chat_title",
     "new_chat_member",
+    "list_tags",
+    "assign_tags",
+    "free_tags",
+    "free_all_tags",
+    "create_tag",
+    "tagger",
+    "your_tags",
+    "update_tag",
+    "create_location",
+    "delete_tag",
 ]
 auto_delete_list = [
     # "where_all_location",
@@ -286,4 +297,113 @@ async def new_chat_member(msg: dict) -> tuple[str, dict] | None:
             "sticker_id": constants.greeting_sticker,
             "reply_to_message_id": message_id,
         }
+    return None
+
+
+async def list_tags(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["list_tags"]["command"]):
+        reply = ""
+        for tag, mentions in tags.list_tags().items():
+            list_of_mentions = ", ".join(
+                [mention.name for mention in mentions]
+            ).replace("@", "")
+            reply = reply + f"<b>{tag}</b>\t{list_of_mentions}\n\n"
+        if not reply:
+            reply = "No custom tags found."
+        return reply
+    return None
+
+
+async def assign_tags(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["assign_tags"]["command"]):
+        tags_from_command = message.split()[1:]
+        if not tags_from_command:
+            return "Run command with a tag name or names (separated by space) as an argument. Example: /assign_tags queer autist"
+        return tags.assign_tags(msg["from"], msg["chat"]["id"], tags_from_command)
+    return None
+
+
+async def create_tag(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["create_tag"]["command"]):
+        arguments = message.split()[1:]
+        if len(arguments) < 2:
+            return "Run this command with a name and a list of mentions as arguments, separated by space. Example: /create_tag anime nya kawaii"
+        tag_name, *mentions = arguments
+        return tags.create_tag(tag_name, mentions)
+    return None
+
+
+async def create_location(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["create_location"]["command"]):
+        arguments = message.split()[1:]
+        if len(arguments) < 2:
+            return "Run this command with a location name and a list of mentions as arguments, separated by space. Example: /create_location anime nya kawaii"
+        tag_name, *mentions = arguments
+        return tags.create_tag(tag_name, mentions, group="location")
+    return None
+
+
+async def free_tags(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["free_tags"]["command"]):
+        tag_list = message.split()[1:]
+        if len(tag_list) < 1:
+            return "Run this command with a list of tag names as arguments, separated by space. Example: /free_tags anime freebsd"
+        return tags.free_tags(msg["from"], msg["chat"]["id"], tag_list)
+    return None
+
+
+async def free_all_tags(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["free_all_tags"]["command"]):
+        return tags.free_all_tags(msg["from"], msg["chat"]["id"])
+    return None
+
+
+async def update_tag(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["update_tag"]["command"]):
+        arguments = message.split()[1:]
+        if len(arguments) < 2:
+            return "Run this command with a name and a list of new mentions as arguments, separated by space. Example: /update_tag anime nya kawaii"
+        tag_name, *mentions = arguments
+        return tags.update_tag(tag_name, mentions)
+    return None
+
+
+async def your_tags(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    if is_message_startswith(message, constants.commands["your_tags"]["command"]):
+        return tags.your_tags(msg["from"], msg["chat"]["id"])
+    return None
+
+
+async def tagger(msg: dict) -> str | None:
+    message = msg.get("text", "").lower()
+    chat_id = msg["chat"]["id"]
+    template = '<a href="tg://user?id={}">{}</a>'
+    mentions = extract_mentions(message)
+    if mentions:
+        users = tags.tagger(chat_id, list(mentions))
+        return ", ".join(
+            [
+                template.format(user.id, user.username or user.first_name)
+                for user in users
+            ]
+        )
+    return None
+
+
+async def delete_tag(msg: dict) -> str | None:
+    message = msg.get("text", "")
+    if is_message_startswith(message, "/delete_tag_please"):
+        arguments = message.split()[1:]
+        if len(arguments) < 1:
+            return "Run this command with a name of a tag. Example: /delete_tag_please anime"
+        tag_name = arguments[0]
+        return tags.delete_tag(tag_name)
     return None

@@ -11,7 +11,7 @@ from .constants import (
     ORACLE_USER_LOGIN,
     ORACLE_WALLET_PATH,
 )
-from .nechat_db_types import User
+from .nechat_db_types import User, user_from_dict
 
 
 oracledb.version = "8.3.0"
@@ -31,24 +31,20 @@ engine = create_engine(
 Session = sessionmaker(bind=engine)
 
 
-def update_user(chat_id: int, user: dict, updates: dict) -> None:
+def update_user(chat_id: int, telegram_user: dict, updates: dict) -> tuple[str, User]:
+    response = "User info updated."
     with Session() as session:
-        old_user = (
-            session.query(User)
-            .filter(User.id == user["id"], User.chat == chat_id)
-            .first()
-        )
-        if old_user:
-            for name, value in updates.items():
-                setattr(old_user, name, value)
-        else:
-            new_user = User(
-                id=user["id"],
-                chat=chat_id,
-                first_name=user["first_name"],
-                last_name=user.get("last_name", ""),
-                username=user.get("username", ""),
-                **updates,
-            )
-            session.add(new_user)
+        session.expire_on_commit = False
+        user = session.query(User).get((telegram_user["id"], chat_id))
+        if not user:
+            response = "User created."
+            user = user_from_dict(telegram_user, chat_id)
+            session.add(user)
+        for name, value in updates.items():
+            if isinstance(value, list):
+                old_value = getattr(user, name)
+                if isinstance(old_value, list):
+                    setattr(user, name, old_value + value)
+            setattr(user, name, value)
         session.commit()
+        return response, user
