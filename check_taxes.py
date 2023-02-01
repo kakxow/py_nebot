@@ -19,5 +19,5 @@ def tagline_tbilisi(chat_id: int) -> str:
 
 
 bot = Bot()
-msg = "ПЛОТИ НОЛОГИ " + tagline_tbilisi(nechat_id)
+msg = "ПЛОТИ НОЛОГИ🥺 " + tagline_tbilisi(nechat_id)
 asyncio.get_event_loop().run_until_complete(bot.send_message(nechat_id, msg))
