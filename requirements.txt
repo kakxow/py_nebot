@@ -11,7 +11,6 @@ python-dotenv==0.13.0
 rfc3986==1.4.0
 sniffio==1.1.0
 urllib3==1.26.5
-asgi_tools==0.64.1
-oracledb==1.2.1
+asgi_tools==0.73.2
 SQLAlchemy==1.4.45
 alembic==1.9.0

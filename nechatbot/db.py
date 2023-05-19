@@ -1,32 +1,10 @@
-import sys
-
-import oracledb
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .constants import (
-    ORACLE_DSN,
-    ORACLE_USER_PW,
-    ORACLE_WALLET_PW,
-    ORACLE_USER_LOGIN,
-    ORACLE_WALLET_PATH,
-)
 from .nechat_db_types import User, user_from_dict
 
 
-oracledb.version = "8.3.0"
-sys.modules["cx_Oracle"] = oracledb
-
-
-engine = create_engine(
-    f"oracle://{ORACLE_USER_LOGIN}:{ORACLE_USER_PW}@",
-    connect_args={
-        "dsn": ORACLE_DSN,
-        "config_dir": ORACLE_WALLET_PATH,
-        "wallet_location": ORACLE_WALLET_PATH,
-        "wallet_password": ORACLE_WALLET_PW,
-    },
-)
+engine = create_engine("sqlite:///nechat.db")
 
 Session = sessionmaker(bind=engine)
 

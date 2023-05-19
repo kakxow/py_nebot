@@ -15,12 +15,6 @@ POLL = os.getenv("POLL", 0)
 
 SECURITY_KEY = JSON_SECURITY_KEY = os.environ["JSON_SECURITY_KEY"]
 
-ORACLE_DSN = os.environ["oracle_dsn"]
-ORACLE_USER_PW = os.environ["oracle_user_pw"]
-ORACLE_WALLET_PW = os.environ["oracle_wallet_pw"]
-ORACLE_USER_LOGIN = os.environ["oracle_user"]
-ORACLE_WALLET_PATH = os.environ["oracle_wallet_path"]
-
 greeting_sticker = "CAADAgADTgUAAsiuFQMWhq_Msw3cOgI"
 positive_credit_sticker_id = "AgADAgADf3BGHA"
 negative_credit_sticker_id = "AgADAwADf3BGHA"
