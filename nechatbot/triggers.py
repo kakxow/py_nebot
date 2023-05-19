@@ -268,6 +268,8 @@ async def where_all_location(msg: dict) -> str | None:
             name_list = [f"\t{user.first_name} {user.last_name}" for user in users]
             list_of_ppl_in_location = "\n".join(name_list)
             reply = reply + f"<b>{location_name}</b>\n{list_of_ppl_in_location}\n\n"
+        if not reply:
+            reply = "No locations set."
         return reply
     return None
 
