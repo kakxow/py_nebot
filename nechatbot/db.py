@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from .nechat_db_types import User, user_from_dict
 
 
-engine = create_engine("sqlite:///nechat.db")
+engine = create_engine("sqlite:////root/py_nebot/nechat.db")
 
 Session = sessionmaker(bind=engine)
 
