@@ -34,6 +34,8 @@ locations = (
         ("ovb", "sib", "nsb", "novosibirsk", "новосибирск", "сиб", "новосиб"),
     ),
     Location("tmb", "Tambov", ("tmb", "tambov", "тамбов", "тмб")),
+    Location("ber", "Berlin", ("ber", "berlin", "берлин", "бер")),
+    Location("hag", "Den Haag", ("hag", "rtm", "denhaag", "гаага", "хаг", "hague")),
     Location("remove", "remove", ("remove",)),
 )
 
