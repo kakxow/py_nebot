@@ -126,7 +126,7 @@ async def corgi(msg: dict) -> str | None:
 
 
 async def shibe(msg: dict) -> str | None:
-    shibe_url = "http://shibe.online/api/shibes?count=1&urls=true&httpsUrls=false"
+    shibe_url = "https://dog.ceo/api/breed/shiba/images/random"
     return await base_dog_trigger(shibe_url, msg, *constants.shibe)
 
 
