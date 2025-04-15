@@ -191,6 +191,10 @@ commands = {
         "command": "/create_location",
         "description": "Добавить новую локацию /create_location Batumi bat bus btm",
     },
+    "roll": {
+        "command": "/roll",
+        "description": "Кинуть кубик /roll 9d30, /roll d10, /roll 4, /roll",
+    },
 }
 
 commands_for_help = "\n".join(
