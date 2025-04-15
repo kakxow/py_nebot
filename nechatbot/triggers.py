@@ -1,4 +1,5 @@
 import random
+import re
 
 from .location import (
     change_location,
@@ -21,6 +22,7 @@ from .predicates import (
 
 __all__ = [
     "ukraine",
+    "roll",
     # "swearing",
     "hate_speech",
     "corgi",
@@ -57,6 +59,32 @@ auto_delete_list = [
     # "where_all_location",
     # "help",
 ]
+
+
+def roll(msg: dict) -> str | None:
+    message: str = msg.get("text", "").lower()
+    if message.startswith("/roll"):
+        _cmd, *args = message.split()
+        roll_arg = args[0] if args else "20"
+        if roll_arg.isnumeric():
+            roll_arg = "d" + roll_arg
+        match = re.match(r"(\d*)\s*d(\d+)", roll_arg)
+        if not match:
+            return f"Invalid argument format {message}, examples - /roll 9d30, /roll d10, /roll 4"
+        dice_num, dice_size = match.groups()
+        if not dice_num:
+            dice_num = 1
+        dice_num = int(dice_num)
+        dice_size = int(dice_size)
+        if not dice_size or not dice_num:
+            return f"Arguments should be greater than 0, {message}"
+        roll_result = sum(random.choices(range(1, dice_size + 1), k=dice_num))  # noqa: S311
+        user = msg["from"]
+        first_name = user["first_name"]  # required field
+        username = user.get("username", first_name)
+        dices = "a" if dice_num == 1 else f"{dice_num} x"
+        return f"{username} rolled a {roll_result} with {dices} 🎲 {dice_size}"
+    return None
 
 
 async def ukraine(msg: dict) -> str | None:
