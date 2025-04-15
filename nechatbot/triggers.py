@@ -61,7 +61,7 @@ auto_delete_list = [
 ]
 
 
-def roll(msg: dict) -> str | None:
+async def roll(msg: dict) -> str | None:
     message: str = msg.get("text", "").lower()
     if message.startswith("/roll"):
         _cmd, *args = message.split()
