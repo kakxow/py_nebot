@@ -83,7 +83,7 @@ async def roll(msg: dict) -> str | None:
         first_name = user["first_name"]  # required field
         username = user.get("username", first_name)
         dices = "a" if dice_num == 1 else f"{dice_num} x"
-        return f"{username} rolled a {roll_result} with {dices} 🎲 {dice_size}"
+        return f"{username} rolled a {roll_result} with {dices} d{dice_size}"
     return None
 
 
