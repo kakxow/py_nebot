@@ -10,7 +10,7 @@ idna==2.9
 python-dotenv==0.13.0
 rfc3986==1.4.0
 sniffio==1.1.0
-urllib3==1.26.18
+urllib3==1.26.19
 asgi_tools==0.73.2
 SQLAlchemy==1.4.45
 alembic==1.9.0
