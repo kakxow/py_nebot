@@ -1,24 +1,23 @@
 import random
 import re
 
+from . import calendar, constants, get_cat, get_dog, get_frog, tags
 from .location import (
     change_location,
-    get_people_from_location,
     get_locations_with_people,
+    get_people_from_location,
     locations,
     locations_text,
 )
-from . import constants, get_dog, get_frog, calendar, tags
 from .predicates import (
     extract_mentions,
+    is_date,
+    is_message_contains_phrases,
     is_message_contains_words,
     is_message_contains_words_and_emojis,
     is_message_ends_with_word,
-    is_message_contains_phrases,
     is_message_startswith,
-    is_date,
 )
-
 
 __all__ = [
     "ukraine",
@@ -29,6 +28,7 @@ __all__ = [
     "shibe",
     "random_dog",
     "random_frog",
+    "random_cat",
     # "toy",
     "pug",
     "terrier",
@@ -55,7 +55,7 @@ __all__ = [
     "create_location",
     "delete_tag",
 ]
-auto_delete_list = [
+auto_delete_list: list[str] = [
     # "where_all_location",
     # "help",
 ]
@@ -141,6 +141,14 @@ async def random_frog(msg: dict) -> str | None:
 async def random_dog(msg: dict) -> str | None:
     random_dog_url = "https://dog.ceo/api/breeds/image/random"
     return await base_dog_trigger(random_dog_url, msg, *constants.random_dog)
+
+
+async def random_cat(msg: dict) -> str | None:
+    random_cat_url = "https://api.thecatapi.com/v1/images/search"
+    message = msg.get("text", "").lower()
+    if is_message_contains_words_and_emojis(message, *constants.random_cat):
+        return await get_cat.get(random_cat_url)
+    return None
 
 
 async def corgi(msg: dict) -> str | None:
